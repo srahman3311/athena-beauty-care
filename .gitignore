@@ -1,0 +1,7 @@
+# node modules
+frontend-athena-beauty-care/node_modules
+backend-athena-beauty-care/node_modules
+
+# environment variable files
+frontend-athena-beauty-care/next.config.js
+backend-athena-beauty-care/.env

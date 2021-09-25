@@ -1,0 +1,123 @@
+.infoPayment_header {
+    text-align: center;
+    margin: 50px 0;
+}
+
+.infoPayment_content {
+    overflow: hidden;
+    position: relative;
+    width: 50%;
+    border-radius: 10px;
+    margin: auto;
+    padding: 3%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.image_container {
+    position: absolute;
+    top: 53%;
+    right: 5%;
+    transform: translate(0%, -50%);
+    width: 200px;
+    height: 200px;
+}
+
+.input_label {
+    margin-bottom: 4px;
+}
+
+.input {
+
+}
+
+.input input[type=text], .input input[type=email] .input input[type=number], .input input[type=password] {
+    border-radius: 6px;
+    padding: 2px 10px;
+    font-size: 14px;
+    outline: none;
+    border: 2px solid rgba(0, 0, 255, 0.178);
+}
+
+.input input[type=email] {
+    border-radius: 6px;
+    padding: 2px 10px;
+    font-size: 14px;
+    outline: none;
+    border: 2px solid rgba(0, 0, 255, 0.178);
+}
+
+ .input input[type=number] {
+    border-radius: 6px;
+    padding: 2px 10px;
+    font-size: 14px;
+    outline: none;
+    border: 2px solid rgba(0, 0, 255, 0.178);
+}
+
+.checkbox {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+    /* background-color: bisque; */
+}
+
+.checkbox input[type=checkbox] {
+    margin-right: 10px;
+}
+
+.checkbox p {
+    font-size: 12px;
+    opacity: 0.5;
+}
+
+.input ::placeholder {
+    font-size: 12px;
+    opacity: 0.5;
+}
+
+
+
+
+
+
+.name_inputs {
+    width: 80%;
+    margin-bottom: 30px;
+    background-color: bisque;
+}
+
+.name_info {
+    width: 100%;
+    display: flex;
+    /* background-color: blue; */
+    
+}
+
+.name_info .input {
+    width: 50%;
+    border-right: 1px solid black;
+}
+
+.phone_input, .email_input, .howHeardAboutUs_input {
+    width: 50%;
+    margin-bottom: 30px;
+}
+
+
+
+.input {
+    margin-right: 20px;
+}
+
+@media(max-width: 600px) {
+    .infoPayment_content {
+        width: 95%;
+    }
+
+    .image_container {
+        top: 60%;
+        width: 150px;
+        height: 200px;
+    
+    }
+}

@@ -1,0 +1,397 @@
+.date_time {
+  width: 100%;
+  padding-bottom: 10px;
+  /* height: 80vh;
+  background-color: #ccc; */
+}
+
+.header {
+  margin: 1% 0 0.2% 0;
+  text-align: center;
+}
+
+.dateTime_content {
+  width: 70%;
+  display: flex;
+  align-items: center;
+  /* background-color: teal; */
+  margin: auto;
+  
+}
+
+.content_Image {
+  padding: 1% 4%;
+  width: 20%;
+  /* position: relative; */
+  /* width: 100%; */
+  /* height: 100%; */
+  /* opacity: 0.4; */
+}
+
+.dates_container {
+  /* height: 200px; */
+  width: 80%;
+  position: relative;
+  margin: auto;
+  /* display: flex;
+  align-items: center; */
+  /* background-color: green; */
+}
+
+.dates {
+  height: 140px;
+  display: flex;
+  flex-wrap: nowrap;
+  width: 100%;
+  padding: 0.5% 2%;
+  overflow-x: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.prev {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translate(0%, -50%);
+  /* font-size: 24px; */
+}
+
+.next {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translate(0%, -50%);
+}
+
+
+.dateCard_container {
+  /* height: 100px; */
+  position: relative;
+  min-width: 20%;
+  /* background-color: bisque; */
+  padding: 0.5% 2.2%;
+  /* overflow: visible; */
+}
+
+.date_card {
+  position: relative;
+  background-image: linear-gradient(#ee7700c4, #EE7600, #ee7700de);
+  /* background-color: darkorange; */
+  width: 100%;
+  padding: 7% 0%;
+  text-align: center;
+  color: white;
+  border-radius: 4px;
+}
+.weekDay_text {
+  margin-bottom: 5px;
+  font-size: 12px;
+}
+.date_text {
+  font-size: 30px;
+  font-weight: bold;
+  /* margin-bottom: 5px; */
+}
+.month_text {
+  margin-bottom: 15px;
+  font-size: 12px;
+}
+
+.clockIcon_container {
+  position: absolute;
+  left: 50%;
+  top: 80%;
+  transform: translate(-50%);
+  width: 30px;
+  height: 30px;
+  z-index: 2;
+  /* background-color: #F9F3DF; */
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  border: 1px solid #ee770060;
+}
+
+@media(max-width: 600px) {
+  .dateTime_content {
+    width: 100%;
+  }
+  .content_Image {
+   
+    width: 30%;
+  
+  }
+  .dates_container {
+    width: 70%;
+    padding: 1% 4%;
+  }
+  .dates {
+    height: 160px;
+    padding: 0% 2%;
+    
+  }
+  .dateCard_container {
+    min-width: 33.33%;
+    /* height: 30%; */
+  }
+  .date_text {
+    font-size: 24px;
+  }
+  .month_text {
+    margin-bottom: 20px;
+  }
+  .clockIcon_container {
+   
+    width: 40px;
+    height: 40px;
+   
+  }
+}
+
+
+
+
+
+
+
+
+
+
+.stylists_times {
+  width: 60%;
+  margin: auto;
+  display: flex;
+  /* background-color: bisque; */
+}
+
+.stylists_container {
+  width: 12%;
+  background-color: #1531b5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1%;
+  border-radius: 0 10px 10px 10px;
+}
+
+.times_container {
+
+  display: flex;
+  width: 88%;
+  /* background-color: #ccc; */
+  /* background-color: burlywood; */
+  padding-left: 2%;
+}
+
+.times {
+  width: 25%;
+  border-right: 1px solid rgba(0, 0, 0, 0.226);
+  height: 100%;
+  background-color: #ccc;
+  /* display: flex;
+  flex-wrap: wrap; */
+  /* border-radius: 10px; */
+}
+
+.time {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10% 2%;
+  margin: auto;
+}
+
+.time_text {
+  font-size: 12px;
+  padding: 2% 4%;
+  border-radius: 4px;
+  /* background-color: darkgoldenrod; */
+}
+
+.stylist {
+  /* background-color: burlywood; */
+  padding: 5%;
+  margin-bottom: 20px;
+}
+
+@media(max-width: 600px) {
+  .stylists_times {
+    width: 95%;
+  }
+
+  .stylists_container {
+    width: 18%;
+  }
+  
+  .times_container {
+    width: 82%;
+    
+  }
+  .time {
+    width: 80%;
+  }
+
+  .time_text {
+    width: 100%;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+.container {
+  min-height: 100vh;
+  padding: 0 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.main {
+  padding: 5rem 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer {
+  width: 100%;
+  height: 100px;
+  border-top: 1px solid #eaeaea;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.title a {
+  color: #0070f3;
+  text-decoration: none;
+}
+
+.title a:hover,
+.title a:focus,
+.title a:active {
+  text-decoration: underline;
+}
+
+.title {
+  margin: 0;
+  line-height: 1.15;
+  font-size: 4rem;
+}
+
+.title,
+.description {
+  text-align: center;
+}
+
+.description {
+  line-height: 1.5;
+  font-size: 1.5rem;
+}
+
+.code {
+  background: #fafafa;
+  border-radius: 5px;
+  padding: 0.75rem;
+  font-size: 1.1rem;
+  font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
+    Bitstream Vera Sans Mono, Courier New, monospace;
+}
+
+.grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 800px;
+  margin-top: 3rem;
+}
+
+.card {
+  margin: 1rem;
+  padding: 1.5rem;
+  text-align: left;
+  color: inherit;
+  text-decoration: none;
+  border: 1px solid #eaeaea;
+  border-radius: 10px;
+  transition: color 0.15s ease, border-color 0.15s ease;
+  width: 45%;
+}
+
+.card:hover,
+.card:focus,
+.card:active {
+  color: #0070f3;
+  border-color: #0070f3;
+}
+
+.card h2 {
+  margin: 0 0 1rem 0;
+  font-size: 1.5rem;
+}
+
+.card p {
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.5;
+}
+
+.logo {
+  height: 1em;
+  margin-left: 0.5rem;
+}
+
+@media (max-width: 600px) {
+  .grid {
+    width: 100%;
+    flex-direction: column;
+  }
+}
+
+*/
