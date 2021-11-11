@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import styles from "../../../styles/CategoryTreatment.module.css";
 
 // Components
-
+import EventHandlerDiv from "../client-reusable-components/EventHandlerDiv";
 
 
 
@@ -28,12 +28,16 @@ export default function Treatment ({ item, activeCategory, activeTreatment, chan
                 // zIndex: activeTreatment !== item.title && "-1",
             }}
         >
-            <div 
+            {/* <div 
                 className={styles.categoryTreatment_hiddenDiv} 
                 onClick = {changeActiveTreatment}
             >
             {item.title}, {item.duration}, {item.price}
-            </div>
+            </div> */}
+            <EventHandlerDiv 
+                content = {`${item.title}, ${item.duration}, ${item.price}`} 
+                clickEventHandler = {changeActiveTreatment} 
+            />
 
 
 

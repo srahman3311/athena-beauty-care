@@ -16,6 +16,8 @@ export const updateAdminInfo = async () => {
 
         // remove the authorization code returned from the google oauth endpoint
         localStorage.removeItem("authCode");
+
+        console.log(response.data.calendarAccessCode);
         
         // save refresh token in the local storage to use it to fetch events
         localStorage.setItem("calendarAccessCode", response.data.calendarAccessCode)

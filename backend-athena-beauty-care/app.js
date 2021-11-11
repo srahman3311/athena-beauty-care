@@ -39,9 +39,11 @@ conn.once("open", () => console.log("Database connected"));
 
 // API Routes
 app.use("/api/admins", require("./api/admins"));
+app.use("/api/stylists", require("./api/stylists"));
 app.use("/api/treatments", require("./api/treatments"));
 app.use("/api/categories", require("./api/categories"));
 app.use("/api/locations", require("./api/locations"));
+app.use("/api/events", require("./api/events"));
 
 // Port & Server
 const PORT = process.env.PORT || 7070;

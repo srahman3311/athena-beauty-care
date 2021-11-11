@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import styles from "../../../styles/CategoryTreatment.module.css";
 
 // Components
+import EventHandlerDiv from "../client-reusable-components/EventHandlerDiv";
 
 
 
@@ -14,9 +15,9 @@ export default function Category ({ item, index, activeCategory, changeActiveCat
 
     return (
         <div className={styles.categoryItem_container}>
-            <div className={styles.categoryTreatment_hiddenDiv} onClick = {changeActiveCategory}>
-                {item.title}
-            </div>
+    
+            <EventHandlerDiv content = {item.title} clickEventHandler = {changeActiveCategory} />
+
             <div className={styles.category_item}>
                 <div 
                     className={styles.categoryItem_content}

@@ -27,12 +27,12 @@ router.get("/", (request, response) => {
 });
 
 
-router.get("/:_id", (request, response) => {
+router.get("/:email", (request, response) => {
 
-    const _id = request.params._id;
+    const email = request.params.email;
 
 
-    Admin.findOne({ _id }, (err, admin) => {
+    Admin.findOne({ email }, (err, admin) => {
 
         if(err) return response.status(500).send(err);
 
@@ -118,6 +118,7 @@ router.post("/add", async (request, response) => {
 router.post("/update", async (request, response) => {
 
     const { email, authCode } = request.body;
+    console.log(authCode);
 
     // Calling google api for access & refresh token in exchange of authorization code received from user oauth consent
     const endpoint = "https://oauth2.googleapis.com/token?";
@@ -261,6 +262,7 @@ router.post("/send_mail", (request, response) => {
 router.post("/fetch-events", async (request, response) => {
 
     const { refreshToken } = request.body;
+    //console.log(refreshToken);
 
     try {
         
@@ -281,6 +283,8 @@ router.post("/fetch-events", async (request, response) => {
             const eventEndpoint = "https://www.googleapis.com/calendar/v3/calendars/primary/events";
             const eventResponse = await axios.get( eventEndpoint, { headers: { Authorization: "Bearer " + token }});
 
+            // console.log(eventResponse);
+
             return response.status(200).json({events: eventResponse.data.items})
             
         } 
@@ -289,10 +293,64 @@ router.post("/fetch-events", async (request, response) => {
         }
     } 
     catch (error) {
+        console.log(error);
         return response.status(500).json({msg: "Something went wrong"});
     }
 
 });
+
+
+
+router.post("/fetch-events-by-mail", async (request, response) => {
+
+    const { email } = request.body;
+    
+
+    Admin.findOne({email}, async (error, admin) => {
+
+        console.log(email);
+        if(error) return response.status(500).json({msg: "Something went wrong"});
+
+
+        try {
+        
+            // Get a new token each time before sending get request for calendar resources (events or whatever)
+            const ep1 = `https://oauth2.googleapis.com/token?client_id=${process.env.CLIENT_ID}&client_secret=`
+            const ep2 = `${process.env.CLIENT_SECRET}&refresh_token=${admin.calendarAccessCode}&grant_type=refresh_token`; 
+            const tokenEndpoint = ep1 + ep2;
+    
+            // Calling the token endpoint
+            const accessTokenResponse = await axios.post(tokenEndpoint);
+    
+            // accessTokenResponse.data.access_token contains the new access_token, use it to send request to get the events
+            const token = accessTokenResponse.data.access_token;
+    
+            try {
+    
+                // 'primary' inside the following endpoint is calendar id. 
+                const eventEndpoint = "https://www.googleapis.com/calendar/v3/calendars/primary/events";
+                const eventResponse = await axios.get( eventEndpoint, { headers: { Authorization: "Bearer " + token }});
+    
+                return response.status(200).json({events: eventResponse.data.items})
+                
+            } 
+            catch(error) {
+                return response.status(500).json({msg: "Something went wrong"});
+            }
+        } 
+        catch (error) {
+            return response.status(500).json({msg: "Something went wrong"});
+        }
+
+
+
+    })
+
+   
+
+});
+
+
 
 
 

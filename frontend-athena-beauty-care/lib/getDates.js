@@ -22,6 +22,4 @@ export const getDates = () => {
     }
 
     return datesArray;
-
-
 }

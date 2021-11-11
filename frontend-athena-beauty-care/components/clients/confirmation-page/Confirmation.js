@@ -10,6 +10,7 @@ import Logo from "../../../images/5.svg";
 
 // libs
 import { getDates } from "../../../lib/getDates";
+import ItemHeader from "../client-reusable-components/ItemHeader";
 
 // components
 
@@ -31,7 +32,8 @@ export default function Confirmation ({ activePage }) {
 
     return (
         <div  style = {{display: activePage === 5 ? "block" : "none"}}>
-            <h1>Confirmation</h1>
+
+            <ItemHeader content = "Confirmation" />
             
         </div>
 

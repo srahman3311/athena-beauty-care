@@ -48,7 +48,7 @@ export default function SideNav ({ calendarAccessCode }) {
                 <Link href="/">
                     <a><i className="fas fa-user-circle"></i></a>
                 </Link>
-                <Link href="/">
+                <Link href="/admins/control-panel">
                     <a><i className="fas fa-cog"></i></a>
                 </Link>
                 <Link href={googleOauthEndpoint}>

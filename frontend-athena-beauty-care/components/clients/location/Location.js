@@ -7,7 +7,10 @@ import axios from "axios";
 // import Logo from "../../../images/5.svg";
 
 // Stylesheet
-import styles from "../../../styles/Location.module.css";
+import styles from "../../../styles/client-ui/Location.module.css";
+import LocationIcon from "./LocationIcon";
+import ItemHeader from "../client-reusable-components/ItemHeader";
+import EventHandlerDiv from "../client-reusable-components/EventHandlerDiv";
 
 // components
 
@@ -36,42 +39,38 @@ export default function Location ({ activePage, state, updateState }) {
 
 
     return (
-        <div className={styles.select_location} style = {{display: activePage === 2 ? "block" : "none"}}>
-            <h4>Select the Location</h4>
+        <div className={styles.select_location} style = {{display: activePage === 1 ? "block" : "none"}}>
+           
+            <ItemHeader content = "Select location" />
+      
 
            <div className={styles.location_list}>
                {locations.map((location, index) => {
-                   return (
+                    return (
                         <div key = {index + 1} className={styles.wrapper}>
-                            <div 
-                                className={styles.location_hiddenDiv} 
-                                onClick = {updateState}
-                            >
-                                {location.name}
-                            </div>
+                    
+                            <EventHandlerDiv content = {location.title} clickEventHandler = {updateState} />
 
                             <div className={styles.locationInfo_container}>
                                 <div 
                                     className={styles.location_info} 
                                     style = {{
-                                        backgroundColor: state.location === location.name && "blue"
+                                        backgroundColor: state.location === location.title && "blue"
                                     }}
                                 >
                                     <div className={styles.location_content}>
-                                        <h5>{location.name}</h5>
+                                        <h5>{location.title}</h5>
                                         <p>{location.address1}, {location.address2}</p>
                                         <p>Zip Code: {location.zipCode}</p>
                                         <p>Phone: {location.phone}</p>
                                         <p>{location.city}</p>
                                         <p>{location.country}</p>
                                     </div>
-                                    <div className={styles.location_icon}>
-                                        <i style = {{color: "darkblue", fontSize: "24px"}} className="fas fa-map-marker-alt"></i>
-                                    </div>
+                                    <LocationIcon />
                                 </div>
                             </div>
                         </div>
-                   );
+                    );
                 })}
         
            </div>

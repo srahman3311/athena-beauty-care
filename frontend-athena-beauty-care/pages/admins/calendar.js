@@ -13,6 +13,7 @@ import { CheckAuth } from "../../auth/CheckAuth";
 // libraries
 import { fetchEvents } from "../../lib/fetchEvents";
 import { updateAdminInfo } from "../../lib/updateAdminInfo";
+import { findTimeSlots } from "../../lib/find-time-slots/findTimeSlots";
 
 // Stylesheets
 import styles from "../../styles/Calendar.module.css";
@@ -42,7 +43,7 @@ export default function CalendarEvents () {
         // if user is not logged in redirect to login page
         if(!CheckAuth()) return router.push("/admins/login");
 
-        setCalendarAccessCode(localStorage.getItem("calendarAccessCode"));
+        // setCalendarAccessCode(localStorage.getItem("calendarAccessCode"));
 
         // if there is authCode in the local storage that means admin is integrating his/her google calendar. In this case
         // admin info must be updated by calling the google oauth token endpoint
@@ -73,7 +74,6 @@ export default function CalendarEvents () {
 
         //if user has already integrated his/her google calendar then fetch all the events and update the events state
         const data = await fetchEvents(calendarAccessCode);
-        console.log(data);
         return setEvents(data);
        
     }, [calendarAccessCode]);
@@ -116,12 +116,45 @@ export default function CalendarEvents () {
         setDisplayModal(true);
     }
 
-    // console.log("hi");
+    /*
+    
+    const startTime = "08:30";
+    const endTime = "09:45";
+
+    const startingHour = Number(startTime.substring(0, 2));
+    const endingHour = Number(endTime.substring(0, 2));
+
+    const startTimeInMinute = Number(startTime.substring(0, 2) * 60) + Number(startTime.substring(3, 5));
+    const endTimeInMinute = Number(endTime.substring(0, 2) * 60) + Number(endTime.substring(3, 5));
+    console.log(startingHour, endingHour);
+    console.log(endTimeInMinute - startTimeInMinute);
+
+    */
+
+
+    // console.log(new Date("2021-10-12"));
+    // console.log(Math.ceil(3.1));
+
+    // const startTime = "08:30";
+    // console.log(Number(startTime.substring(0, 2)), startTime.substring(3, 5));
+
+
+    // let x = 0;
+    // let abc = [3, 4, 8, 2, 7] 
+
+    // abc.forEach((xxx, index) => {
+    //     if(xxx === 8) x = abc[index + 1];
+    // });
+
+    // console.log(x);
+    
+    
  
     return (
 
         <div className={styles.calendar}>
             <Title />
+            <button onClick={findTimeSlots}>find time slots</button>
             <div className={styles.calendar_content}>
                 <SideNav calendarAccessCode = {calendarAccessCode} />
                 <div className={styles.big_calendar}>

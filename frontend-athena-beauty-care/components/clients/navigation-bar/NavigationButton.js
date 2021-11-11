@@ -4,7 +4,19 @@ import styles from "../../../styles/NavigationBar.module.css";
 
 
 
-export default function NavigationButton ({ windowWidth, activePage, setActivePage, value }) {
+export default function NavigationButton ({ windowWidth, state, selectedTreatments, activePage, setActivePage, value }) {
+
+
+    function changeActivePage(event) {
+
+        const newValue = Number(event.target.textContent);
+
+        if(newValue === 2 && !state.location) return alert("Please select a location");
+
+        if(newValue === 3 && !selectedTreatments.length) return alert("Please select at least one treatment");
+
+        setActivePage(newValue);
+    }
 
     return (
         <div className={styles.navigation_links} style = {{width: value === 5 && (windowWidth <= 600 ? "50px" : "100px")}}>
@@ -13,7 +25,8 @@ export default function NavigationButton ({ windowWidth, activePage, setActivePa
                     style = {{backgroundColor: activePage === value && "darkblue"}}
                     className= {styles.navigationLink_button} 
                     value = {activePage} 
-                    onClick= {event => setActivePage(Number(event.target.textContent))}
+                    // onClick= {event => setActivePage(Number(event.target.textContent))}
+                    onClick= {changeActivePage}
                 >
                     {value}
                 </button>
@@ -30,5 +43,3 @@ export default function NavigationButton ({ windowWidth, activePage, setActivePa
         
     
 }
-
-//style = {{visibility: value === "5" && "hidden"}}

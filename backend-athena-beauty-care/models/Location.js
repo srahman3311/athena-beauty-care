@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const locationSchema = new mongoose.Schema({
-    name: { type: String, required: true },
+    title: { type: String, required: true },
     address1: { type: String, required: true },
     address2: { type: String, required: true },
     city: { type: String, required: true },
@@ -18,8 +18,27 @@ const Location = mongoose.model("Location", locationSchema);
 
 
 
+
+module.exports = Location;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // let newLocation = new Location({
-//     name: "Athena Beauty Care - Location 2",
+//     title: "Athena Beauty Care - Location 2",
 //     address1: "Street 321, xyz town",
 //     address2: "If there is more info",
 //     city: "The Hague",
@@ -29,9 +48,3 @@ const Location = mongoose.model("Location", locationSchema);
 // });
 
 // newLocation.save(err => console.log("Location saved"));
-
-
-
-
-
-module.exports = Location;

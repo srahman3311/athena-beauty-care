@@ -7,9 +7,11 @@ export const fetchEvents = async (refreshToken) => {
 
     try {
 
+        // console.log(refreshToken + "abc");
         const response = await axios.post(endpoint, { refreshToken }, {withCredentials: true});
 
         const data = response.data.events;
+        console.log(data);
 
         const events = data.map(item => {
             return {

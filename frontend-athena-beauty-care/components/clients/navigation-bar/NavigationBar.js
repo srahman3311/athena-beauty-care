@@ -10,15 +10,24 @@ import NavigationText from "./NavigationText";
 
 
 
-export default function NavigationBar ({ activePage, setActivePage}) {
+export default function NavigationBar ({ state, selectedTreatments, activePage, setActivePage}) {
 
     const items = [
-        {id: 1, content: "Category and Treatment"},
-        {id: 2, content: "Select Location"},
+        {id: 1, content: "Select Location"},
+        {id: 2, content: "Category and Treatment"},
         {id: 3, content: "Select Time / Date"},
         {id: 4, content: "Information / Payment"},
         {id: 5, content: "Confirmation"}
     ];
+
+    // const items = [
+    //     {id: 1, content: "Category and Treatment"},
+    //     {id: 2, content: "Select Location"},
+    //     {id: 3, content: "Select Time / Date"},
+    //     {id: 4, content: "Information / Payment"},
+    //     {id: 5, content: "Confirmation"}
+    // ];
+    
     
     const [windowWidth, setWindowWidth] = useState(0);
 
@@ -40,6 +49,8 @@ export default function NavigationBar ({ activePage, setActivePage}) {
                             <NavigationButton
                                 key = {item.id}
                                 windowWidth = {windowWidth}
+                                state = {state}
+                                selectedTreatments = {selectedTreatments}
                                 activePage = {activePage}
                                 setActivePage = {setActivePage}
                                 value = {item.id} 

@@ -11,8 +11,9 @@ export default function Auth () {
         if(!router.isReady) return;
 
         const { code } = router.query;
+        console.log(code);
         
-        if(typeof code !== "undefined" || !code || code === null) return router.push("/admins/calendar");
+        //if(typeof code !== "undefined" || !code || code === null) return router.push("/admins/calendar");
         
         localStorage.setItem("authCode", code);
        

@@ -80,11 +80,6 @@ export default function Home () {
     }
 
     function addTreatment (stylist, item) {
-
-        // console.log(stylist, item);
-
-        
-
        
         // loop through the already selected treatments to see if clicked one exists or not. It returns either true or false
         const doesExist = selectedTreatments.some(newItem => newItem.treatmentTitle === item.title);
@@ -114,7 +109,8 @@ export default function Home () {
                             treatmentTitle: item.title, 
                             treatmentDuration: item.duration, 
                             treatmentPrice: item.price,
-                            choosenStylist: stylist 
+                            choosenStylist: stylist,
+                            location: state.location 
                         }
                     ]
                 );
@@ -137,7 +133,8 @@ export default function Home () {
                     treatmentTitle: item.title, 
                     treatmentDuration: item.duration, 
                     treatmentPrice: item.price,
-                    choosenStylist: stylist 
+                    choosenStylist: stylist,
+                    location: state.location 
                 }
             ]
         );
@@ -162,10 +159,15 @@ export default function Home () {
 
     }
 
-    console.log(selectedTreatments);
+    // console.log(selectedTreatments);
     return (
         <div className={styles.home}>
-            <NavigationBar activePage = {activePage} setActivePage = {setActivePage} />
+            <NavigationBar 
+                state = {state} 
+                selectedTreatments = {selectedTreatments}
+                activePage = {activePage} 
+                setActivePage = {setActivePage} 
+            />
 
 
             <CategoryTreatment
@@ -189,6 +191,7 @@ export default function Home () {
                 state = {state} 
                 activePage = {activePage}
                 updateState = {updateState} 
+                selectedTreatments = {selectedTreatments}
             />
 
             <InformationPayment 

@@ -9,7 +9,7 @@ const treatmentSchema = new mongoose.Schema({
     description: { type: String, required: true },
     duration: { type: Number, required: true },
     price: { type: Number, required: true },
-    stylists: { type: Array, required: true},
+    stylists: [{ type: String, required: true }],
     remarks: { type: String }
 });
 

@@ -7,6 +7,7 @@ import styles from "../../../styles/CategoryTreatment.module.css";
 // Components
 import Category from "./Category";
 import Treatment from "./Treatment";
+import ItemHeader from "../client-reusable-components/ItemHeader";
 
 
 
@@ -45,7 +46,7 @@ export default function CategoryTreatment ({
         
     }, [])
 
-    // console.log(activeTreatment);
+    // console.log(treatments);
 
     function addNewTreatment(stylist, treatment) {
         console.log(stylist);
@@ -55,9 +56,10 @@ export default function CategoryTreatment ({
    
    
     return (
-        <div className={styles.category_treatment} style = {{display: activePage === 1 ? "block" : "none"}}>
+        <div className={styles.category_treatment} style = {{display: activePage === 2 ? "block" : "none"}}>
             <div className={styles.category}>
-                <h4 className={styles.header}>Select the Category</h4>
+                {/* <h4 className={styles.header}>Select the Category</h4> */}
+                <ItemHeader content = "Select category"/>
 
                 <div className={styles.categoryItem_list}>
                     {categories.map((item, index) => {
@@ -77,7 +79,7 @@ export default function CategoryTreatment ({
 
 
             <div className={styles.treatment}>
-                <h4 className={styles.header}>Select the Treatment</h4>
+                <ItemHeader content = "Select treatment"/>
 
                 <div className={styles.treatmentItem_list}>
                     {treatments.map((item, index) => {

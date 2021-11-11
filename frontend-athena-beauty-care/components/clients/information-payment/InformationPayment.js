@@ -13,6 +13,7 @@ import styles from "../../../styles/InformationPayment.module.css";
 
 // components
 import Input from "./Input";
+import ItemHeader from "../client-reusable-components/ItemHeader";
 
 
 
@@ -34,7 +35,8 @@ export default function InformationPayment ({ activePage, clientInfo, clientInfo
 
            
 
-            <h4 className={styles.infoPayment_header}>Information / Payment</h4>
+            {/* <h4 className={styles.infoPayment_header}>Information / Payment</h4> */}
+            <ItemHeader content = "Information / payment" />
 
             <div className={styles.infoPayment_content}>
 

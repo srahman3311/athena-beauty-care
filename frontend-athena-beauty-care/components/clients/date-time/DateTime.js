@@ -15,10 +15,11 @@ import { getDates } from "../../../lib/getDates";
 import DateCard from "./DateCard";
 import Stylists from "./Stylists";
 import Times from "./Times";
+import ItemHeader from "../client-reusable-components/ItemHeader";
 
 
 
-export default function DateTime ({ state, activePage }) {
+export default function DateTime ({ state, activePage, selectedTreatments }) {
 
     const [dates, setDates] = useState([]);
 
@@ -29,12 +30,13 @@ export default function DateTime ({ state, activePage }) {
     }, [])
 
     
-
+    console.log(selectedTreatments);
 
     return (
         <div className={styles.date_time} style = {{display: activePage === 3 ? "block" : "none"}}>
             <Script src="https://kit.fontawesome.com/14ab8b126d.js" crossorigin="anonymous" />
-            <h3 className={styles.header}>Select The Time / Date</h3>
+            {/* <h3 className={styles.header}>Select The Time / Date</h3> */}
+            <ItemHeader content = "Select date/time" />
 
             <div className={styles.dateTime_content}>
                 <div className={styles.content_Image}>
