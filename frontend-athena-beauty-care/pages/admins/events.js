@@ -19,7 +19,7 @@ import axios from "axios";
 
 //Images
 import loginBgImage from "../../images/raphael-lovaski-Pe9IXUuC6QU-unsplash.jpg";
-import logoImage from "../../images/127089417-face-expression-of-woman-with-blond-hair-smiling-beautiful-cartoon-character-modern-business-woman-v.jpg";
+import logoImage from "../../images/carton-woman.jpg";
 
 // components
 import ControlPanel from "../../components/admins/control-panel/ControlPanel";

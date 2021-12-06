@@ -1,9 +1,8 @@
 // React Modules
 import { useEffect, useState } from "react";
 
-// location-modifiers
-import { locationInfoOnChange } from "../../../libs/location-modifiers/locationInfoOnChange";
-import { addUpdateLocation } from "../../../libs/location-modifiers/addUpdateLocation";
+
+
 // import { hideAddLocationForm } from "../../../libs/location-modifiers/hideAddLocationForm";
 
 // Components
@@ -20,6 +19,21 @@ import styles from "../../../styles/locations/AddLocation.module.css"
 export default function AddLocation ({ 
     locationInfo, setLocationInfo, isAddingUpdating, setIsAddingUpdating, addUpdateLocation, validationError
 }) {
+
+
+    function locationInfoOnChange(event) {
+
+        const name = event.target.name;
+        const value = event.target.value;
+    
+        setLocationInfo(currentVal => {
+            return {
+                ...currentVal,
+                [name]: value
+            };
+        });
+    
+    }
 
     
 
@@ -104,11 +118,6 @@ export default function AddLocation ({
                 onChange = {locationInfoOnChange}
                 error = {validationError}
             /> 
-
-           
-
-            
-           
          
             <button onClick = {() => setIsAddingUpdating(false)}>Close</button>
             <button value = {locationInfo.locationId} onClick = {addUpdateLocation}>Save</button>

@@ -1,9 +1,6 @@
 // Modifier functions
 import axios from "axios";
 import useAxios from "../../libs/useAxios";
-//import { searchLocations } from "../../libs/location-modifiers/searchLocations";
-import { displayHideLocationForm } from "../../libs/location-modifiers/displayHideLocationForm";
-//import { deleteLocation } from "../../libs/location-modifiers/deleteLocation";
 import { locationDataTableHeaders } from "../../libs/data";
 
 
@@ -14,22 +11,18 @@ import { useEffect, useState } from "react";
 import styles from "../../styles/locations/AddLocation.module.css";
 
 // components
-import Loading from "../../components/reusable-components/Loading";
-
 // Table Components
-import ItemTableHeader from "../../components/reusable-components/item-table/ItemTableHeader";
-import ItemTableData from "../../components/reusable-components/item-table/ItemTableData";
-
+import DataTable from "../../components/reusable-components/data-table/DataTable";
 // Other Components
 import ControlPanel from "../../components/admins/control-panel/ControlPanel";
 import AddLocation from "../../components/admins/location/AddLocation";
 import NextPrevItems from "../../components/reusable-components/NextPrevItems";
 import NextPrevView from "../../components/reusable-components/NextPrevView";
 import SearchInput from "../../components/reusable-components/SearchInput";
-import DataTable from "../../components/reusable-components/data-table/DataTable";
 import LocationDetails from "../../components/admins/location/LocationDetails";
 import DeletePrompt from "../../components/reusable-components/DeletePrompt";
 import Message from "../../components/reusable-components/Message";
+import Loading from "../../components/reusable-components/Loading";
 
 
 
@@ -66,7 +59,6 @@ export default function Location () {
     // States
     
     const [actionMessage, setActionMessage] = useState(null);
-    const [deleting, setDeleting] = useState(false);
     const [showDeletePrompt, setShowDeletePrompt] = useState(false);
     const [locationIdForDeleting, setLocationIdForDeleting] = useState("");
     const [itemNameForDeletePrompt, setItemNameForDeletePrompt] = useState("");
@@ -87,8 +79,6 @@ export default function Location () {
         zipCode: ""
     });
     
-
- 
     useEffect(() => {
 
         setHappening("fetching");
@@ -222,32 +212,7 @@ export default function Location () {
 
     }
 
-    async function deleteLocation(event) {
-
-        const _id = event.target.value; 
-
-        setShowDeletePrompt(false);
-        
-
-        try {
-
-            setActionMessage("Deleting");
-
-            const response = await axios.post("http://localhost:7070/api/locations/delete", { _id });
-
-            setActionMessage(response.data.msg);
-
-        } catch(error) {
-
-            console.log(error);
-
-        } finally {
-
-            setHappening("re-fetching");
-        }
-
-    }
-
+   
     function fetchNextPrevItems(event) {
 
         const newSkip = Number(event.target.value);
@@ -278,7 +243,6 @@ export default function Location () {
                     // if true, isAddingUpdating will display the form and will hide if false
                     isAddingUpdating = {isAddingUpdating}
                     // Clicking on close button will invoke this function 
-                    displayHideLocationForm = {displayHideLocationForm}
                     // Following attributes will be passed to the displayHideLocationForm function as arguments for
                     // updating the states on close button click event. isAddingUpdating will be set to false,
                     // setLocationInfo will update the locationInfo state with it's initial empty values   
@@ -330,12 +294,13 @@ export default function Location () {
                 />
                 <NextPrevView state = {state} />
                 <DeletePrompt
-                    deleting = {deleting}
                     itemId = {locationIdForDeleting}
                     itemNameForDeletePrompt = {itemNameForDeletePrompt} 
                     showDeletePrompt = {showDeletePrompt} 
                     setShowDeletePrompt = {setShowDeletePrompt} 
-                    deleteItem = {deleteLocation}
+                    endpoint = "http://localhost:7070/api/locations/delete"
+                    setActionMessage = {setActionMessage}
+                    setHappening = {setHappening}
                 />
             </div>
 

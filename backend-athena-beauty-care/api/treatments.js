@@ -25,7 +25,7 @@ router.post("/", async (request, response) => {
     // As LIKE in MySQL
     // For multiple fields
     let regex = new RegExp(searchText, "i"); // 'i' here to ignore case-sensitivity
-    const query = { $or: [{title: regex }, {description: regex}, {country: regex}] }
+    const query = { $or: [{title: regex }, {description: regex}, {category: regex}] }
 
     // To know the total length of data found with the searchText
     Treatment.find(query, (error, totalTreatments) => {
@@ -37,7 +37,7 @@ router.post("/", async (request, response) => {
 
             if(newError) return response.status(500).send(newError);
     
-            return response.status(200).json({treatments, dataLength: totalTreatments.length});
+            return response.status(200).json({items: treatments, totalItemCount: totalTreatments.length});
         });
 
     });
@@ -66,7 +66,7 @@ router.post("/find-by-category", async (request, response) => {
 
 router.post("/add-treatment", (request, response) => {
 
-    // return console.log(request.body);
+    console.log(request.body);
 
     let { category, title, description, duration, price, stylists, remarks } = request.body;
 
@@ -77,10 +77,10 @@ router.post("/add-treatment", (request, response) => {
 
     Treatment.findOne({ title }, (error, treatment) => {
 
-        if(error) return response.status(500).send(error);
+        if(error) return response.status(500).send("Something went wrong");
           
         // If a Treatment is found then return with 403 error message(403 means exists)
-        if(treatment) return response.status(403).json({msg: `Treatment with the title '${ title }' already exists`});
+        if(treatment) return response.status(403).send(`Treatment with the title '${ title }' already exists`);
 
 
         // if no Treatment is found then Treatment will be null, which is a falsy value in JavaScript. In that case add a
@@ -89,9 +89,9 @@ router.post("/add-treatment", (request, response) => {
 
         newTreatment.save(saveError => {
 
-            if(saveError) return response.status(500).send(error);
+            if(saveError) return response.status(500).send("Something went wrong");
 
-            return response.status(200).json({msg: "New Treatment has been successfully added"});
+            return response.status(201).send("Saved");
 
         });
 
@@ -118,13 +118,12 @@ router.post("/update", (request, response) => {
 
     Treatment.findOneAndUpdate({ _id: treatmentId }, fieldsToUpdate, error => {
 
-        if(error) return response.status(500).send(error);
+        if(error) return response.status(500).send("Something went wrong");
 
-        return response.status(200).json({msg: "Treatment Details have been successfully updated"});
+        return response.status(200).send("Updated");
 
-       
+    
     });
-
 
 
 });
@@ -151,41 +150,17 @@ router.post("/update", (request, response) => {
 router.post("/delete", (request, response) => {
 
 
-    const { _id, searchText, skip, limit } = request.body;
-
+    const { _id } = request.body;
 
     Treatment.deleteOne({ _id }, error => {
 
-        if(error) return response.status(500).send(error);
+        if(error) return response.status(500).send("Something went wrong");
 
-        // As LIKE in MySQL
-        // For multiple fields
-        let regex = new RegExp(searchText, "i"); // 'i' here to ignore case-sensitivity
-        const query = { $or: [{title: regex }, {category: regex}, {description: regex}] }
-
-        // To know the total length of data found with the searchText
-        Treatment.find(query, (newError, totalTreatments) => {
-
-            if(newError) return response.status(500).send(newError);
-
-            // This database query is to get the data after skipping and limiting
-            Treatment.find(query).limit(limit).skip(skip).exec((newNewError, treatments) => {
-
-                if(newNewError) return response.status(500).send(newNewError);;
-        
-                return response.status(200).json({treatments, dataLength: totalTreatments.length});
-            });
-
-    });
-
-
-          
-        
+        return response.status(200).send("Deleted");
 
     });
 
 });
-
 
 
 

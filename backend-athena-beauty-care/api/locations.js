@@ -97,27 +97,21 @@ router.post("/update", (request, response) => {
     // Destructuring request.body
     const { locationId, title, address1, address2, city, country, phone, zipCode } = request.body;
 
-    Location.findOne({ title }, (error, location) => {
 
-        if(error) return response.status(500).send("Something went wrong");
-
-        if(location) return response.status(403).send("A location with the same title already exists");
-
-        // Putting the fields need to be updated inside an object
-        const fieldsToUpdate = { title, address1, address2, city, country, phone, zipCode };
+    // Putting the fields need to be updated inside an object
+    const fieldsToUpdate = { title, address1, address2, city, country, phone, zipCode };
 
 
-        Location.findOneAndUpdate({ _id: locationId }, fieldsToUpdate, updateError => {
+    Location.findOneAndUpdate({ _id: locationId }, fieldsToUpdate, updateError => {
 
-            if(updateError) return response.status(500).send(error);
+        if(updateError) return response.status(500).send(error);
 
-            return response.status(201).send("Updated");
+        return response.status(201).send("Updated");
 
-        
-        });
-
-
+    
     });
+
+
 
 });
 
@@ -133,7 +127,7 @@ router.post("/delete", (request, response) => {
 
         if(error) return response.status(500).send("Something went wrong");
 
-        return response.status(200).json({msg: "Deleted"});
+        return response.status(200).send("Deleted");
 
     });
 

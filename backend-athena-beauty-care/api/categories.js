@@ -96,25 +96,22 @@ router.post("/update", (request, response) => {
     // Destructuring request.body
     const { categoryId, title } = request.body;
 
-    Category.findOne({ title }, (error, category) => {
-
-        if(error) return response.status(500).send("Something went wrong");
-        if(category) return response.status(403).send("A category with the same title already exists");
-
-        // Putting the fields need to be updated inside an object
-        const fieldsToUpdate = { title };
+    
+    
+    // Putting the fields need to be updated inside an object
+    const fieldsToUpdate = { title };
 
 
-        Category.findOneAndUpdate({ _id: categoryId }, fieldsToUpdate, updateError => {
+    Category.findOneAndUpdate({ _id: categoryId }, fieldsToUpdate, updateError => {
 
-            if(updateError) return response.status(500).send("Something went wrong");
+        if(updateError) return response.status(500).send("Something went wrong");
 
-            return response.status(201).send("Updated");
+        return response.status(201).send("Updated");
 
-        
-        });
 
     });
+
+    
 
     
 
@@ -150,7 +147,7 @@ router.post("/delete", (request, response) => {
 
         if(error) return response.status(500).send("Something went wrong");
 
-        return response.status(200).json({msg: "Deleted"});
+        return response.status(200).send("Deleted");
 
     });
 

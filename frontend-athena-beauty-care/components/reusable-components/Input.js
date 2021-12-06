@@ -21,7 +21,7 @@ export default function Input ({ label, type, name, value, placeholder, onChange
                 name = {name} 
                 placeholder = {placeholder} 
                 value = {value} 
-                onChange = {event => onChange(event, setData)} 
+                onChange = {onChange} 
             />
 
             <ErrorMessage

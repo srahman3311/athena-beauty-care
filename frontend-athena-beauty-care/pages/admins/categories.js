@@ -1,10 +1,5 @@
 // Modifier functions
 import { categoryDataTableHeaders } from "../../libs/data";
-
-import { fetchCategoryData } from "../../libs/category-modifiers/fetchCategoryData";
-import { searchCategories } from "../../libs/category-modifiers/searchCategories";
-import { displayHideCategoryForm } from "../../libs/category-modifiers/displayHideCategoryForm";
-import { deleteCategory } from "../../libs/category-modifiers/deleteCategory";
 import useAxios from "../../libs/useAxios";
 import axios from "axios";
 
@@ -18,14 +13,11 @@ import styles from "../../styles/category/Category.module.css";
 // components
 
 // Table Components
-import ItemTableHeader from "../../components/reusable-components/item-table/ItemTableHeader";
-import ItemTableData from "../../components/reusable-components/item-table/ItemTableData";
 import DataTable from "../../components/reusable-components/data-table/DataTable";
 
 // Other Components
 import ControlPanel from "../../components/admins/control-panel/ControlPanel";
 import AddCategory from "../../components/admins/category/AddCategory";
-
 import SearchInput from "../../components/reusable-components/SearchInput";
 import Loading from "../../components/reusable-components/Loading";
 import DeletePrompt from "../../components/reusable-components/DeletePrompt";
@@ -52,21 +44,17 @@ export default function Category () {
     const endpoint = "http://localhost:7070/api/categories";
     const requestBody = { searchText: categoryState.searchText, skip: categoryState.skip, limit: categoryState.limit };
     const { data, totalDataCount, error, loading } = useAxios("post", endpoint, requestBody, happening);
-
-
     const [actionMessage, setActionMessage] = useState(null);
     const [showDeletePrompt, setShowDeletePrompt] = useState(false);
     const [itemNameForDeletePrompt, setItemNameForDeletePrompt] = useState("");
-    const [deleting, setDeleting] = useState(false);
     const [categories, setCategories] = useState([]);
     const [categoryTableData, setCategoryTableData] = useState([]);
-
     // This categoryId will be used to open the details of the category. 
     const [categoryId, setCategoryId] = useState("");
     const [categoryIdForDeleting, setCategoryIdForDeleting] = useState("");
     const [isAddingUpdating, setIsAddingUpdating] = useState(false);
-    // const [display]
     const [categoryInfo, setCategoryInfo] = useState({ categoryId: "", title: "" });
+    const [validationError, setValidationError] = useState(false);
 
  
     useEffect(() => {
@@ -206,32 +194,7 @@ export default function Category () {
    
     
     
-    async function deleteCategory(event) {
-
-        const _id = event.target.value; 
-
-        setShowDeletePrompt(false);
-        
-
-        try {
-
-            setActionMessage("Deleting");
-
-            const response = await axios.post("http://localhost:7070/api/categories/delete", { _id });
-
-            setActionMessage(response.data.msg);
-
-        } catch(error) {
-
-            console.log(error);
-
-        } finally {
-
-            setHappening("re-fetching");
-        }
-
-    }
-
+   
 
 
 
@@ -254,6 +217,7 @@ export default function Category () {
                     // setLocationInfo will update the locationInfo state with it's initial empty values   
                     setCategoryInfo = {setCategoryInfo}
                     setIsAddingUpdating = {setIsAddingUpdating}
+                    validationError = {setValidationError}
                 />
 
              
@@ -291,12 +255,13 @@ export default function Category () {
 
                 
                 <DeletePrompt
-                    deleting = {deleting}
                     itemId = {categoryIdForDeleting}
                     itemNameForDeletePrompt = {itemNameForDeletePrompt} 
                     showDeletePrompt = {showDeletePrompt} 
                     setShowDeletePrompt = {setShowDeletePrompt} 
-                    deleteItem = {deleteCategory}
+                    endpoint = "http://localhost:7070/api/categories/delete"
+                    setActionMessage = {setActionMessage}
+                    setHappening = {setHappening}
                 />
 
                 

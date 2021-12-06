@@ -1,5 +1,4 @@
-//
-import { fetchLocationData } from "../../libs/location-modifiers/fetchLocationData";
+
 
 
 
