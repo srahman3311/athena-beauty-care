@@ -16,24 +16,14 @@ export default function Treatment ({ item, activeCategory, activeTreatment, chan
 
     
 
-    // console.log(activeTreatment);
-    // console.log(item.title)
-
 
     return (
         <div 
             className={styles.treatmentItem_container} 
             style = {{
                 display: activeCategory === item.category ? "block" : "none",
-                // zIndex: activeTreatment !== item.title && "-1",
             }}
         >
-            {/* <div 
-                className={styles.categoryTreatment_hiddenDiv} 
-                onClick = {changeActiveTreatment}
-            >
-            {item.title}, {item.duration}, {item.price}
-            </div> */}
             <EventHandlerDiv 
                 content = {`${item.title}, ${item.duration}, ${item.price}`} 
                 clickEventHandler = {changeActiveTreatment} 
@@ -61,7 +51,6 @@ export default function Treatment ({ item, activeCategory, activeTreatment, chan
                             </li>
                         );
                     })}
-                    
                 </ul>
             </div>
 
@@ -78,19 +67,9 @@ export default function Treatment ({ item, activeCategory, activeTreatment, chan
                         x => x.treatmentTitle === item.title
                     ) && "linear-gradient(to left, red, rgba(0, 0, 139, 0.4))"
                 }}
-                // style = {{
-                //     backgroundImage: activeTreatment === item.title && "linear-gradient(to left, darkblue, rgba(0, 0, 139, 0.4))" 
-                // }}
             >
-                <div 
-                    className={styles.treatmentItem_content} 
-                    style = {{
-                        marginBottom: !item.description && "0",
-                        paddingBottom: !item.description && "4px",
-
-                    }}
-                >
-                    <p>{item.title}</p>
+                <div className={styles.treatmentItem_content}>
+                    <p>{item.title} ({item.duration} minutes)</p>
                     <p>${item.price}</p>
                 </div>
                 <p

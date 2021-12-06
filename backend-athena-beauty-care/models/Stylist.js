@@ -15,7 +15,7 @@ const stylistSchema = new mongoose.Schema({
     email: { type: String, required: true },
     password: { type: String, required: true },
     status: { type: String, required: true },
-    imageFilee: { type: String },
+    imageFilename: { type: String },
     refreshToken: { type: String },
     workSchedule: [workScheduleSchema]
 });
@@ -75,7 +75,7 @@ bcrypt.genSalt(10, (err, salt) => {
         email: "jennifer.gorgeous@gmail.com",
         password: "jennifer123",
         status: "active",
-        imageFilee: "",
+        imageFilename: "",
         refreshToken: "",
         workSchedule: [schedule1, schedule2, schedule3, schedule4, schedule5]
     });

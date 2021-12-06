@@ -18,6 +18,7 @@ const eventSchema = new mongoose.Schema({
     clientPhone: { type: String },
     description: { type: String },
     eventPrice: { type: Number, required: true },
+    googleCalendarEventId: { type: String, required: true },
     status: { type: String, required: true}
 });
 

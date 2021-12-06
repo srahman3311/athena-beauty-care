@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-
+import useAxios from "../../../libs/useAxios";
 // Stylesheet
 import styles from "../../../styles/CategoryTreatment.module.css";
 
 // Components
-import Category from "./Category";
+import Category from "./category/Category";
 import Treatment from "./Treatment";
 import ItemHeader from "../client-reusable-components/ItemHeader";
 
@@ -13,40 +13,36 @@ import ItemHeader from "../client-reusable-components/ItemHeader";
 
 
 export default function CategoryTreatment ({ 
-    activePage, activeCategory, changeActiveCategory, activeTreatment, changeActiveTreatment, selectedTreatments, addTreatment 
+    activePage, 
+    activeCategory, 
+    changeActiveCategory, 
+    activeTreatment, 
+    changeActiveTreatment, 
+    selectedTreatments,
+    addTreatment 
 }) {
+
+    const {
+        data: categoryData, error: categoryDataFetchingError, loading: categoryDataLoading
+    } = useAxios("get", "http://localhost:7070/api/categories", {});
+    const {
+        data: treatmentData, error: treatmentDataFetchingError, loading: treatmentDataLoading
+    } = useAxios("get", "http://localhost:7070/api/treatments", {})
 
     const [categories, setCategories] = useState([]);
     const [treatments, setTreatments] = useState([]);
+
+    useEffect(() => {
+
+        if(categoryData !== null) setCategories(categoryData);
+        if(treatmentData !== null) setTreatments(treatmentData);
+
+    }, [categoryData, treatmentData])
+
+
+
     
     
-    
-
-    useEffect(async () => {
-
-        try {
-
-            const response = await axios.get("http://localhost:7070/api/categories");
-
-            setCategories(response.data.categories);
-
-            try {
-
-                const newResponse = await axios.get("http://localhost:7070/api/treatments");
-                setTreatments(newResponse.data.treatments);
-
-
-            } catch(error) {
-                console.log(error.response.data.msg);
-            }
-
-        } catch(error) {
-            console.log(error.response.data.msg);
-        }
-        
-    }, [])
-
-    // console.log(treatments);
 
     function addNewTreatment(stylist, treatment) {
         console.log(stylist);
@@ -54,6 +50,13 @@ export default function CategoryTreatment ({
     }
 
    
+    // if(categoryDataLoading || treatmentDataLoading) {
+    //     return (<div>Loading....</div>);
+    // }
+
+    if(categoryDataFetchingError || treatmentDataFetchingError) {
+        return (<div>Something went wrong</div>);
+    }
    
     return (
         <div className={styles.category_treatment} style = {{display: activePage === 2 ? "block" : "none"}}>
@@ -99,13 +102,6 @@ export default function CategoryTreatment ({
                 </div>
 
             </div>
-
-            {/* <h1>Hello</h1>
-            <h1>Hello</h1>
-            <h1>Hello</h1>
-            <h1>Hello</h1>
-            <h1>Hello</h1><h1>Hello</h1>
-            <h1>Hello</h1> */}
             
         </div>
         

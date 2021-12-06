@@ -14,15 +14,11 @@ export default function CategoryList({ eventState, setEventState, eventInfo, set
            <select 
                 name = "treatmentCategory" 
                 onChange = {event => eventInfoOnChange(event, setEventInfo, eventState, setEventState)} 
-                value = { categories.length && !treatmentCategory ? categories[0].title :treatmentCategory }
+                value = { categories.length && !treatmentCategory ? categories[0].title : treatmentCategory }
             >
-                {/* <option value = "Select product">Select product</option> */}
                 {categories.map((category, index) => {
                     return (
-
                         <option key = {index + 1}>{category.title}</option>
-                        
-                        // !product.availability && <OptionComponent key = {index + 1} product = {product} />
                     );
                 })}
             </select> 

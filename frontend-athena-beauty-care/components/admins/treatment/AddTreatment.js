@@ -41,7 +41,7 @@ export default function AddTreatment ({
         axios.get("http://localhost:7070/api/categories")
             .then(response => {
 
-                setCategories(response.data.categories);
+                setCategories(response.data);
 
                 // If user is okay with the first item on the category dropdown then he/she won't click on the dropdown
                 // to select one. In such scenario treamentInfo category should be the title of the first category of the
@@ -49,7 +49,7 @@ export default function AddTreatment ({
                 setTreatmentInfo(currentVal => {
                     return {
                         ...currentVal, 
-                        category: response.data.categories[0].title
+                        category: response.data[0].title
                     }
                 });
         
@@ -57,7 +57,7 @@ export default function AddTreatment ({
                 axios.get("http://localhost:7070/api/stylists")
                     .then(newResponse => {
 
-                        setStylists(newResponse.data.stylists);
+                        setStylists(newResponse.data);
 
                     })
                     .catch(err => alert(err.response.data.msg))

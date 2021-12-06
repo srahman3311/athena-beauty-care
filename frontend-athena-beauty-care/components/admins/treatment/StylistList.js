@@ -1,6 +1,6 @@
 import Script from "next/script";
 
-import styles from "../../../styles/stylists/Stylist.module.css";
+import styles from "../../../styles/stylists/Stylists.module.css";
 
 
 

@@ -4,7 +4,7 @@ import { fetchLocationData } from "../../libs/location-modifiers/fetchLocationDa
 
 
 
-export default function NextPrevItems ({ state, setState }) {
+export default function NextPrevItems ({ state, fetchNextPrevItems }) {
 
     const { searchText, skip, limit, dataLength } = state;
 
@@ -17,19 +17,18 @@ export default function NextPrevItems ({ state, setState }) {
         <div className="next-prev">
             <button 
                 name = "prev" 
-                onClick = {event => fetchLocationData(state, Number(event.target.value), setState)} 
+                onClick = {fetchNextPrevItems} 
                 value = {firstCondtion ? 0 : secondCondition }
             >
                     &laquo; Prev
             </button>
             <button 
                 name="next" 
-                onClick={event => fetchLocationData(state, Number(event.target.value), setState)} 
-                value={skip + limit > dataLength ? skip : skip + limit }>
+                onClick={fetchNextPrevItems} 
+                value = { skip + limit > dataLength ? skip : skip + limit }>
                     Next &raquo;
             </button>
         </div>
-        
     )
 }
 

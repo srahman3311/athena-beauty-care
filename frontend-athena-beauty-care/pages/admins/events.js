@@ -1,5 +1,7 @@
 // event-modifiers
 import { fetchEventData } from "../../libs/event-modifiers/fetchEventData";
+import { eventsDataTableHeaders } from "../../libs/data";
+import useAxios from "../../libs/useAxios";
 
 
 // Next Modules
@@ -7,7 +9,7 @@ import Link from "next/link";
 import { useRouter } from "next/router"; // For Redirecting 
 import Image from "next/image";
 import Head from "next/head"; // For google fonts and others
-import styles from "../../styles/Login.module.css";
+import styles from "../../styles/Events.module.css";
 
 // React Modules
 import { useEffect, useState } from "react";
@@ -23,6 +25,8 @@ import logoImage from "../../images/127089417-face-expression-of-woman-with-blon
 import ControlPanel from "../../components/admins/control-panel/ControlPanel";
 import EventList from "../../components/admins/events/EventList";
 import AddEvent from "../../components/admins/events/AddEvent";
+import DataTable from "../../components/reusable-components/data-table/DataTable";
+import EventDetails from "../../components/admins/events/EventDetails";
 import EventsTableHeader from "../../components/admins/events/events-table/EventsTableHeader";
 import EventsTableData from "../../components/admins/events/events-table/EventsTableData";
 
@@ -33,9 +37,11 @@ import EventsTableData from "../../components/admins/events/events-table/EventsT
 export default function Events () {
 
 
+    
 
     const [treatmentId, setTreatmentId] = useState("");
     const [isAddingUpdating, setIsAddingUpdating] = useState(false);
+    const [eventTableData, setEventTableData] = useState([]);
     const [eventState, setEventState] = useState({
         events: [],
         locations: [],
@@ -47,72 +53,56 @@ export default function Events () {
         limit: 20,
         dataLength: 0
     });
-    // const [eventInfo, setEventInfo] = useState({
-    //     eventId: "",
-    //     eventDate: null,
-    //     // Set inital values of start and end time with the first item of times array. If user forgets to pick the times
-    //     // then setting the initial values will make sure that an error message is shown to the user.  
-    //     startTime: times[0],
-    //     endTime: times[0],
-    //     treatmentCategory: "",
-    //     treatmentName: "",
-    //     stylist: "",
-    //     stylistEmail: "",
-    //     eventLocation: "",
-    //     eventDuration: 0,
-    //     clientName: "",
-    //     clientEmail: "",
-    //     clientPhone: "",
-    //     eventDescription: "",
-    //     eventPrice: ""
-    // });
-
-
+  
 
     useEffect(() => {
 
-        fetchEventData(eventState, eventState.skip, setEventState);
+        fetchEventData(eventState, eventState.skip, setEventState, setEventTableData);
+       
 
     }, []);
 
-
-    console.log(eventState);
  
 
     
     return (
-        <div className="" style={{display: "flex"}}>
+        <div className="" style = {{display: "flex", position: "relative", height: "100vh"}}>
             <ControlPanel />
             <AddEvent />
 
             {/* <div className="search_add">
                 <SearchInput
                     state = {state}
-                    setState = {setState}
+                    setState = {setEventState}
                     searchData = {searchTreatments} 
                 />
                 <DisplayFormButton
                     text = "Add Event" 
-                    displayHideForm = {displayHideTreatmentForm}
+                    displayHideForm = {displayHideEventForm}
                     setIsAddingUpdating = {setIsAddingUpdating} 
                 />
             </div> */}
 
+            {/* <button>Add Event</button> */}
 
-            {/* <div className="data-table">
-                <table>
-                    <EventsTableHeader />
-                    <EventsTableData 
-                        events = {eventState.events}
-                        // setItemId = {setTreatmentId}
-                        // isAddingUpdating = {isAddingUpdating}
-                        // state = {state} 
-                        // setState = {setState}
-                        // deleteItem = {deleteTreatment}
-                    />
-                </table>
-            </div> */}
+            <DataTable
+                tableHeaders = {eventsDataTableHeaders} 
+                tableData = {eventTableData} 
+                tableFor = "events"
+                setItemId = {setTreatmentId}
+            />
 
+            <EventDetails
+                events = {eventState.events}
+                treatmentId = {treatmentId} 
+                setTreatmentId = {setTreatmentId}
+            />
+
+            
+         
+
+
+        
         </div>
     );
 }

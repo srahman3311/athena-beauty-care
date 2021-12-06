@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import AddTreatment from "../../components/admins/treatment/AddTreatment";
 
 // Stylesheet
-import styles from "../../styles/locations/Location.module.css";
+import styles from "../../styles/locations/AddLocation.module.css";
 
 // components
 
@@ -128,7 +128,6 @@ export default function Treatment () {
                     // Add and update forms are same but need to populate the form's input fields with the data for updating
                     displayHideForm = {displayHideTreatmentForm}
                 />
-                
             </div>
 
         </div>

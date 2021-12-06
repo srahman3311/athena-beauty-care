@@ -7,6 +7,9 @@ export const searchLocations = async (searchText, state, setState) => {
 
 
 
+
+
+
     // if(typeof newLimit !== "undefined") limit = newLimit;
 
 
@@ -16,15 +19,15 @@ export const searchLocations = async (searchText, state, setState) => {
         
         const response = await axios.post(endpoint, { searchText, skip, limit });
 
-        const { locations, dataLength } = response.data;
+        const { items, totalItemCount } = response.data;
 
         setState(currentValue => {
             return {
                 ...currentValue,
-                locations,
+                locations: items,
                 searchText,
                 limit,
-                dataLength
+                dataLength: totalItemCount
             }
         });
 

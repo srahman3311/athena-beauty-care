@@ -8,26 +8,20 @@ import { addUpdateLocation } from "../../../libs/location-modifiers/addUpdateLoc
 
 // Components
 import Input from "../../reusable-components/Input";
-import SaveButton from "../../reusable-components/SaveButton";
-import CloseFormButton from "../../reusable-components/CloseFormButton";
+
 
 // Stylesheet
 import styles from "../../../styles/locations/AddLocation.module.css"
-import SuccessFailMessage from "../../reusable-components/SuccessFailMessage";
+
 
 
 
 
 export default function AddLocation ({ 
-    locationInfo, setLocationInfo, isAddingUpdating, setIsAddingUpdating, displayHideLocationForm 
+    locationInfo, setLocationInfo, isAddingUpdating, setIsAddingUpdating, addUpdateLocation, validationError
 }) {
 
-    const [successFailMessage, setSuccessFailMessage] = useState("");
-    const [validationError, setValidationError] = useState(false);
     
-   
-    
-    // console.log(locationInfo);
 
     return (
 
@@ -53,7 +47,6 @@ export default function AddLocation ({
                 placeholder="House, building ...."
                 onChange = {locationInfoOnChange}
                 error = {validationError}
-               
             />  
 
             <Input 
@@ -65,7 +58,6 @@ export default function AddLocation ({
                 placeholder="Street ...."
                 onChange = {locationInfoOnChange}
                 error = {validationError}
-               
             />  
 
             <Input 
@@ -113,26 +105,14 @@ export default function AddLocation ({
                 error = {validationError}
             /> 
 
-            <SuccessFailMessage 
-                successFailMessage = {successFailMessage}
-                setSuccessFailMessage = {setSuccessFailMessage}
-            />
+           
 
             
-            <CloseFormButton 
-                closeForm = {displayHideLocationForm} 
-                setData = {setLocationInfo} 
-                setIsAddingUpdating = {setIsAddingUpdating}
-            />
-            <SaveButton
-                // To pass to addUpdateLocation function. Empty string will make http request to backend at 
-                // add_location endpoint, else update request will be made to backend 
-                _id = {locationInfo.locationId} 
-                data = {locationInfo} 
-                setError = {setValidationError} 
-                setSuccessFailMessage = {setSuccessFailMessage}
-                addNewItem = {addUpdateLocation} 
-            />
+           
+         
+            <button onClick = {() => setIsAddingUpdating(false)}>Close</button>
+            <button value = {locationInfo.locationId} onClick = {addUpdateLocation}>Save</button>
+           
         </div>
     );
 }

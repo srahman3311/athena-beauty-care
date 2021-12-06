@@ -12,6 +12,8 @@ export const fetchTreatmentData = async (state, newSkip, setState) => {
         
         const response = await axios.post(endpoint, { searchText, skip: newSkip, limit });
 
+        console.log(response.data);
+
         const { treatments, dataLength } = response.data;
 
         setState(currentValue => {

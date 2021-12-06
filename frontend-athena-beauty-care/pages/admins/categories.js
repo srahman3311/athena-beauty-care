@@ -11,7 +11,7 @@ import { deleteCategory } from "../../libs/category-modifiers/deleteCategory";
 import { useEffect, useState } from "react";
 
 // Stylesheet
-import styles from "../../styles/locations/Location.module.css";
+import styles from "../../styles/locations/AddLocation.module.css";
 
 // components
 

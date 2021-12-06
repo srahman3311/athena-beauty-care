@@ -1,9 +1,12 @@
 // React
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import useAxios from "../components/clients/libs/useAxios";
 
 // Stylesheet
 import styles from "../styles/Home.module.css";
 
+// Reusable Components
+import Alert from "../components/reusable-components/Alert";
 
 // components
 import NavigationBar from "../components/clients/navigation-bar/NavigationBar";
@@ -16,6 +19,7 @@ import Confirmation from "../components/clients/confirmation-page/Confirmation";
 
 export default function Home () {
 
+    // Other states
     const [selectedTreatments, setSelectedTreatments] = useState([]);
     const [validationError, setValidationError] = useState(false);
     const [clientInfo, setClientInfo] = useState({
@@ -36,11 +40,13 @@ export default function Home () {
         coupon: "",
         paid: false,
     });
-
     const [activeCategory, setActiveCategory] = useState("Brows");
     const [activeTreatment, setActiveTreatment] = useState("");
     const [activePage, setActivePage] = useState(1);
-    
+
+
+
+
 
     // update the state with values of the non input fields such as location, stylist, date, time etc. 
     function updateState (event) {
@@ -70,13 +76,10 @@ export default function Home () {
         const text = event.target.textContent;
         const treatment = text.substring(0, text.indexOf(","));
         // console.log(treatment);
-
         
-
         if(treatment === activeTreatment) return setActiveTreatment("");
         return setActiveTreatment(treatment);
 
-        //return activeTreatment ? setActiveTreatment("") : setActiveTreatment(treatment);
     }
 
     function addTreatment (stylist, item) {
@@ -141,8 +144,6 @@ export default function Home () {
 
         return setActiveTreatment("");
 
-       
-            
     }
 
     function clientInfoOnChangeHandler (event) {
@@ -159,7 +160,11 @@ export default function Home () {
 
     }
 
-    // console.log(selectedTreatments);
+
+    // if(locationDataLoading || categoryDataLoading || treatmentDataLoading) {
+    //     return (<div>Loading....</div>);
+    // }
+
     return (
         <div className={styles.home}>
             <NavigationBar 
@@ -168,7 +173,11 @@ export default function Home () {
                 activePage = {activePage} 
                 setActivePage = {setActivePage} 
             />
-
+            <Location
+                activePage = {activePage}
+                state = {state}
+                updateState = {updateState} 
+            />
 
             <CategoryTreatment
                 selectedTreatments = {selectedTreatments}
@@ -180,11 +189,7 @@ export default function Home () {
                 changeActiveCategory = {changeActiveCategory}
             />
 
-            <Location 
-                activePage = {activePage}
-                state = {state}
-                updateState = {updateState} 
-            />
+           
 
 
             <DateTime
@@ -203,6 +208,7 @@ export default function Home () {
 
 
             <Confirmation activePage = {activePage} />
+            {/* <Alert message="" /> */}
         </div>
     );
 }

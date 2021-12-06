@@ -1,6 +1,6 @@
 //
 
-export const displayHideLocationForm = (text, setIsAddingUpdating, setLocationInfo, setLocationId, locations, id ) => {
+export const displayHideLocationForm = (text, setIsAddingUpdating, setLocationInfo, setLocationId, locations, id, setHappening ) => {
 
 
     // if user is just trying to add a new item then event.target.textContent would include the string "Add".
@@ -62,6 +62,7 @@ export const displayHideLocationForm = (text, setIsAddingUpdating, setLocationIn
                     zipCode: locations[i].zipCode
                 };
             });
+            
             break;
         }
         

@@ -104,6 +104,8 @@ router.post("/add-event", async (request, response) => {
         eventPrice 
     } = request.body;
 
+    // console.log(stylist);
+
 
     // Steps
 
@@ -216,10 +218,10 @@ router.post("/add-event", async (request, response) => {
 
 
 
-
+            // console.log(foundStylist);
             // Step 4
             // Add the event
-            const refreshToken = foundStylist.refreshToken;
+            //const refreshToken = foundStylist.refreshToken;
 
             try {
             
@@ -233,6 +235,8 @@ router.post("/add-event", async (request, response) => {
         
                 // accessTokenResponse.data.access_token contains the new access_token, use it to send request to get the events
                 const token = accessTokenResponse.data.access_token;
+                console.log(accessTokenResponse);
+                console.log(token);
         
                 try {
 
@@ -251,8 +255,8 @@ router.post("/add-event", async (request, response) => {
                     const config = { headers: {Authorization: "Bearer " + token} }
                     const eventResponse = await axios.post(eventEndpoint, event, config);
 
-                    console.log(eventResponse);
-                    console.log(eventResponse.data);
+                    //console.log(eventResponse);
+                    // console.log(eventResponse.data);
         
                     
                     if(eventResponse.status !== 200) {
@@ -279,6 +283,7 @@ router.post("/add-event", async (request, response) => {
                         clientPhone,
                         description,
                         eventPrice,
+                        googleCalendarEventId: eventResponse.data.id,
                         status: "Active"
                     });
             
@@ -296,6 +301,7 @@ router.post("/add-event", async (request, response) => {
                 }
             } 
             catch (error) {
+                console.log("Hi");
                 console.log(error);
                 return response.status(500).json({msg: "Something went wrong"});
             }

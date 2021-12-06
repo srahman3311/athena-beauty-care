@@ -14,7 +14,7 @@ export const getStylists = async (newTreatments) => {
 
         newTreatments.forEach(treatment => {
 
-            response.data.stylists.forEach(stylist => {
+            response.data.forEach(stylist => {
 
                 const stylistFullName = stylist.firstName + " " + stylist.lastName;
 

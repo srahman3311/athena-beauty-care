@@ -12,6 +12,7 @@ import styles from "../../../styles/DateTime.module.css";
 import { getDates } from "../../../lib/getDates";
 
 // components
+import ChooseStylists from "./choose-stylists/ChooseStylists";
 import DateCard from "./DateCard";
 import Stylists from "./Stylists";
 import Times from "./Times";
@@ -30,12 +31,12 @@ export default function DateTime ({ state, activePage, selectedTreatments }) {
     }, [])
 
     
-    console.log(selectedTreatments);
 
     return (
         <div className={styles.date_time} style = {{display: activePage === 3 ? "block" : "none"}}>
+
+            <ChooseStylists selectedTreatments = {selectedTreatments} />
             <Script src="https://kit.fontawesome.com/14ab8b126d.js" crossorigin="anonymous" />
-            {/* <h3 className={styles.header}>Select The Time / Date</h3> */}
             <ItemHeader content = "Select date/time" />
 
             <div className={styles.dateTime_content}>

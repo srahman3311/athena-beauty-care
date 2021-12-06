@@ -1,5 +1,6 @@
 
-export default function SearchInput ({state, setState, searchData }) {
+
+function SearchInput ({state, setState, searchData, endpoint, setItems, setLoadingErrorMessage }) {
 
 
     return (
@@ -8,8 +9,13 @@ export default function SearchInput ({state, setState, searchData }) {
                 type = "text"
                 value = {state.searchText}
                 placeholder="Search"  
-                onChange = {event => searchData(event.target.value, state, setState)}  
+                //onChange = {event => searchData(event.target.value, state, setState, endpoint, setItems, setLoadingErrorMessage)} 
+                onChange = {searchData} 
+                
             />
         </div>
     );
 }
+
+
+export default SearchInput;

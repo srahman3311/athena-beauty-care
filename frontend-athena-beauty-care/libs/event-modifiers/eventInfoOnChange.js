@@ -100,7 +100,6 @@ export const eventInfoOnChange = async (event, setEventInfo, eventState, setEven
     }
 
 
-
     setEventInfo(currentVal => {
         return {
             ...currentVal,

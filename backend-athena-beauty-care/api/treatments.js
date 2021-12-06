@@ -10,7 +10,7 @@ router.get("/", (request, response) => {
 
         if(error) return response.status(500).json({ msg: "Something went wrong" });
 
-        return response.status(200).json({ treatments });
+        return response.status(200).json(treatments);
 
     });
 
