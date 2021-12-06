@@ -1,16 +1,27 @@
 
 
-function SearchInput ({state, setState, searchData, endpoint, setItems, setLoadingErrorMessage }) {
+function SearchInput ({ value, setState, setHappening }) {
+
+    function handleChange(event) {
+
+        setState(currentValue => {
+            return {
+                ...currentValue,
+                searchText: event.target.value
+            };
+        });
+
+        setHappening("searching");
+    }
 
 
     return (
         <div className="search">
             <input 
                 type = "text"
-                value = {state.searchText}
+                value = {value}
                 placeholder="Search"  
-                //onChange = {event => searchData(event.target.value, state, setState, endpoint, setItems, setLoadingErrorMessage)} 
-                onChange = {searchData} 
+                onChange = {handleChange} 
                 
             />
         </div>

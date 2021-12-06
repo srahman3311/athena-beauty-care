@@ -28,6 +28,8 @@ export const locationDataTableHeaders = [
     "Title", "Address1", "Address2", "City", "Country", "Phone", "Zip Code", "Action", "Delete"
 ];
 
+export const categoryDataTableHeaders = ["Title", "Action", "Delete"];
+
 export const stylistDataTableHeaders = ["First Name", "Last Name", "Email", "Password", "Details"];
 
 export const eventsDataTableHeaders = [

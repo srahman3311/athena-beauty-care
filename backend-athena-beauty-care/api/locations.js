@@ -66,7 +66,6 @@ router.post("/add-location", (request, response) => {
         if(error) return response.status(500).json({msg: "Something went wrong, probably server error"});
           
         // If a location is found then return with 403 error message(403 means exists)
-        //if(location) return response.status(403).send(`Location with the title '${ title }' already exists`);
         if(location) return response.status(403).send(`Error - Location already exists`);
 
 
@@ -98,18 +97,26 @@ router.post("/update", (request, response) => {
     // Destructuring request.body
     const { locationId, title, address1, address2, city, country, phone, zipCode } = request.body;
 
+    Location.findOne({ title }, (error, location) => {
 
-    // Putting the fields need to be updated inside an object
-    const fieldsToUpdate = { title, address1, address2, city, country, phone, zipCode };
+        if(error) return response.status(500).send("Something went wrong");
+
+        if(location) return response.status(403).send("A location with the same title already exists");
+
+        // Putting the fields need to be updated inside an object
+        const fieldsToUpdate = { title, address1, address2, city, country, phone, zipCode };
 
 
-    Location.findOneAndUpdate({ _id: locationId }, fieldsToUpdate, error => {
+        Location.findOneAndUpdate({ _id: locationId }, fieldsToUpdate, updateError => {
 
-        if(error) return response.status(500).send(error);
+            if(updateError) return response.status(500).send(error);
 
-        return response.status(200).send("Updated");
+            return response.status(201).send("Updated");
 
-       
+        
+        });
+
+
     });
 
 });
@@ -124,7 +131,7 @@ router.post("/delete", (request, response) => {
 
     Location.deleteOne({ _id }, error => {
 
-        if(error) return response.status(500).send(error);
+        if(error) return response.status(500).send("Something went wrong");
 
         return response.status(200).json({msg: "Deleted"});
 

@@ -133,21 +133,7 @@ export default function Location () {
 
     }, [data, happening]);
 
-    console.log(data);
 
-
-    function handleChange(event) {
-
-        setState(currentValue => {
-            return {
-                ...currentValue,
-                searchText: event.target.value
-            };
-        });
-
-        setHappening("searching");
-
-    }
 
     function openAddLocationModal(event) {
 
@@ -304,11 +290,9 @@ export default function Location () {
 
                 <div className="search_add">
                     <SearchInput
-                        state = {state}
+                        value = {state.searchText}
                         setState = {setState}
-                        searchData = {handleChange}
-                        setItems = {setLocations}
-                        endpoint = {endpoint} 
+                        setHappening = {setHappening}
                     />
 
                     <button onClick = {() => setIsAddingUpdating(true)}>Add Location</button>
@@ -338,23 +322,6 @@ export default function Location () {
                     setLocationId = {setLocationId}
                     openAddLocationModal = {openAddLocationModal}
                 />
-
-                {/* <button 
-                    name = "prev" 
-                    onClick = {fetchNextItems} 
-                    value = {
-                        state.skip - state.limit < 0 ? 0 : state.skip === state.dataLength && state.skip - state.limit * 2 >= 0 ? state.skip - state.limit * 2 : state.skip - state.limit 
-                    }
-                >
-                        &laquo; Prev
-                </button>
-
-                <button
-                    value = {state.skip + state.limit > state.dataLength ? state.skip : state.skip + state.limit}
-                    onClick = {fetchNextItems}
-                >
-                    Next
-                </button> */}
 
                 <NextPrevItems 
                     state = {state} 

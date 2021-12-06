@@ -19,7 +19,7 @@ import SuccessFailMessage from "../../reusable-components/SuccessFailMessage";
 
 
 export default function AddCategory ({ 
-    categoryInfo, setCategoryInfo, isAddingUpdating, setIsAddingUpdating, displayHideCategoryForm 
+    categoryInfo, setCategoryInfo, isAddingUpdating, setIsAddingUpdating, addUpdateCategory
 }) {
 
     const [successFailMessage, setSuccessFailMessage] = useState("");
@@ -46,8 +46,10 @@ export default function AddCategory ({
                 successFailMessage = {successFailMessage}
                 setSuccessFailMessage = {setSuccessFailMessage}
             />
+            <button onClick = {() => setIsAddingUpdating(false)}>Close</button>
+            <button value = {categoryInfo.categoryId} onClick = {addUpdateCategory}>Save</button>
 
-            
+{/*             
             <CloseFormButton 
                 closeForm = {displayHideCategoryForm} 
                 setData = {setCategoryInfo} 
@@ -61,7 +63,7 @@ export default function AddCategory ({
                 setError = {setValidationError} 
                 setSuccessFailMessage = {setSuccessFailMessage}
                 addNewItem = {addUpdateCategory} 
-            />
+            /> */}
         </div>
     );
 }
