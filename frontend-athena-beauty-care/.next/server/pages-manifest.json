@@ -2,7 +2,8 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/next/dist/pages/_error": "pages/next/dist/pages/_error.js",
+  "/admins/locations": "pages/admins/locations.js",
   "/admins/events": "pages/admins/events.js",
-  "/admins/locations": "pages/admins/locations.js"
+  "/admins/stylists": "pages/admins/stylists.js",
+  "/stylists/[stylistId]": "pages/stylists/[stylistId].js"
 }

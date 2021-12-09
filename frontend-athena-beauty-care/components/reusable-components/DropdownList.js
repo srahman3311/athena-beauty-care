@@ -3,14 +3,12 @@
 
 export default function DropdownList ({ name, nameKey, blankOptionValue, data, handleDropdownOnchange }) {
 
-
-
-
     return (
         <div className="dropdown_list">
             <select name = {name} onChange = {handleDropdownOnchange}>
                 <option value = "">{blankOptionValue}</option>
                 {data.map((item, index) => {
+
                     return (
                         <option key = {index + 1} value = {item[nameKey]}>
                             {item[nameKey]}

@@ -5,7 +5,6 @@ import axios from "axios";
 export const addUpdateEvent = async (eventId, eventInfo, setValidationError, setSuccessFailMessage) => {
 
 
-    console.log(eventInfo);
     const { eventDate, startTime, endTime, clientEmail, eventPrice } = eventInfo
 
     if(!eventDate) return alert("Please select a date");

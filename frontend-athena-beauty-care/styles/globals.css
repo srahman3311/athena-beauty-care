@@ -15,6 +15,10 @@ body {
   color: #ee7700c4;
 }
 
+.dropdown_input {
+  margin: 20px 0;
+}
+
 
 .delete_prompt {
   position: fixed;

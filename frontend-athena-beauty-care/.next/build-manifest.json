@@ -34,10 +34,15 @@
       "static/chunks/main.js",
       "static/chunks/pages/admins/locations.js"
     ],
-    "/next/dist/pages/_error": [
+    "/admins/stylists": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/next/dist/pages/_error.js"
+      "static/chunks/pages/admins/stylists.js"
+    ],
+    "/stylists/[stylistId]": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/stylists/[stylistId].js"
     ]
   },
   "ampFirstPages": []

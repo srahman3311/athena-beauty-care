@@ -59,7 +59,7 @@ router.post("/", (request, response) => {
     // As LIKE in MySQL
     // For multiple fields
     let regex = new RegExp(searchText, "i"); // 'i' here to ignore case-sensitivity
-    const query = { $or: [{title: regex }, {stylist: regex}, {clientEmail: regex}] }
+    const query = { $or: [{treatmentCategory: regex}, { title: regex }, { stylist: regex }, { clientEmail: regex }] }
 
     // To know the total length of data found with the searchText
     Event.find(query, (error, totalEvents) => {
@@ -71,7 +71,7 @@ router.post("/", (request, response) => {
 
             if(newError) return response.status(500).json({msg: "Something went wrong"});
     
-            return response.status(200).json({events, dataLength: totalEvents.length});
+            return response.status(200).json({items: events, totalItemCount: totalEvents.length});
         });
 
     });
@@ -103,8 +103,6 @@ router.post("/add-event", async (request, response) => {
         eventDescription,
         eventPrice 
     } = request.body;
-
-    // console.log(stylist);
 
 
     // Steps
@@ -192,7 +190,7 @@ router.post("/add-event", async (request, response) => {
         // Step 3
 
         // Loop throught the events of the stylist and check to see if she is busy at requested startTime
-        Event.find({ stylist }, async (error, events) => {
+        Event.find({ stylist, status: "Active" }, async (error, events) => {
 
             if(error) return response.status(500).json({msg: "Something went wrong"});
     
@@ -217,11 +215,9 @@ router.post("/add-event", async (request, response) => {
             // Step 3 ends here
 
 
-
-            // console.log(foundStylist);
-            // Step 4
-            // Add the event
-            //const refreshToken = foundStylist.refreshToken;
+           
+            // Step 4 - Add the event
+            const refreshToken = foundStylist.refreshToken;
 
             try {
             
@@ -235,8 +231,6 @@ router.post("/add-event", async (request, response) => {
         
                 // accessTokenResponse.data.access_token contains the new access_token, use it to send request to get the events
                 const token = accessTokenResponse.data.access_token;
-                console.log(accessTokenResponse);
-                console.log(token);
         
                 try {
 
@@ -255,15 +249,12 @@ router.post("/add-event", async (request, response) => {
                     const config = { headers: {Authorization: "Bearer " + token} }
                     const eventResponse = await axios.post(eventEndpoint, event, config);
 
-                    //console.log(eventResponse);
-                    // console.log(eventResponse.data);
-        
                     
-                    if(eventResponse.status !== 200) {
-                        return response.status(403).json({
-                            msg: `Something went wrong, please try again later`
-                        })
-                    }
+                    // if(eventResponse.status !== 200) {
+                    //     return response.status(403).json({
+                    //         msg: `Something went wrong, please try again later`
+                    //     })
+                    // }
 
 
                     let description = eventDescription;
@@ -291,18 +282,17 @@ router.post("/add-event", async (request, response) => {
             
                         if(error) return response.status(500).json({msg: "Something went wrong"});
                         
-                        return response.status(200).json({msg: "event successfully saved"});
+                        return response.status(201).json({msg: "event successfully saved"});
                     });
                     
                 } 
                 catch(error) {
-                    console.log(error);
+                   
                     return response.status(500).json({msg: "Something went wrong"});
                 }
             } 
             catch (error) {
-                console.log("Hi");
-                console.log(error);
+
                 return response.status(500).json({msg: "Something went wrong"});
             }
 
@@ -312,6 +302,144 @@ router.post("/add-event", async (request, response) => {
 
 
 });
+
+
+router.post("/cancel-event", (request, response) => {
+
+    const { _id } = request.body;
+    
+    Event.findOne({ _id }, (error, event) => {
+
+        if(error) return response.status(500).send("Something went wrong");
+
+        // We need to get the refreshToken from the stylist associated with this event to attach it with the delete
+        // request to google's server
+        const stylistQuery = { 
+            firstName: event.stylist.substring(0, event.stylist.indexOf(" ")),
+            lastName: event.stylist.substring(event.stylist.indexOf(" ") + 1, event.stylist.length)
+        }
+        Stylist.findOne(stylistQuery, async (stylistError, stylist) => {
+
+            if(stylistError) return response.status(500).send("Something went wrong");
+
+            const refreshToken = stylist.refreshToken;
+
+            try {
+
+                // Get a new token each time before sending delete request
+                const ep1 = `https://oauth2.googleapis.com/token?client_id=${process.env.CLIENT_ID}&client_secret=`
+                const ep2 = `${process.env.CLIENT_SECRET}&refresh_token=${refreshToken}&grant_type=refresh_token`; 
+                const tokenEndpoint = ep1 + ep2;
+        
+                // Calling the token endpoint
+                const accessTokenResponse = await axios.post(tokenEndpoint);
+        
+                // accessTokenResponse.data.access_token contains the new access_token, use it to send delete request
+                const token = accessTokenResponse.data.access_token;
+
+                try {
+
+                
+                    const { googleCalendarEventId } = event;
+                   
+                    const deleteEndpoint1 = `https://www.googleapis.com/calendar/v3/calendars/primary/`;
+                    const deleteEndpoint2 = `events/${googleCalendarEventId}?${process.env.API_KEY}`;
+                    const deleteEndpoint = deleteEndpoint1 + deleteEndpoint2;
+
+                    const config = { headers: {Authorization: "Bearer " + token, Accept: "application/json"} };
+
+                    // It must be a delete request, not post
+                    const deleteResponse = await axios.delete(deleteEndpoint, config);
+
+                    // Now update the status of the event saved in our db
+                    event.status = "Cancelled";
+
+                    event.save(saveError => {
+
+                        if(saveError) return response.status(500).send("Something went wrong");
+
+                        return response.status(200).send("Cancelled");
+
+                    });
+
+                    
+                } catch (error) {
+
+                    return response.status(500).send("Something went wrong");
+                }
+
+            } catch (error) {
+
+                return response.status(500).send("Something went wrong");
+
+            }
+        });
+
+
+    });
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -328,7 +456,7 @@ router.post("/add-event", async (request, response) => {
 router.post("/update", async (request, response) => {
 
     const { email, authCode } = request.body;
-    console.log(authCode);
+    
 
     // Calling google api for access & refresh token in exchange of authorization code received from user oauth consent
     const endpoint = "https://oauth2.googleapis.com/token?";

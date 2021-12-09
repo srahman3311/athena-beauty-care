@@ -6,154 +6,175 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useEffect, useState } from "react";
 
 import useAxios from "../../../libs/useAxios";
-import { times } from "../../../libs/event-modifiers/times";
+import { times } from "../../../libs/data";
 
 // event-modifiers
-import { eventInfoOnChange } from "../../../libs/event-modifiers/eventInfoOnChange";
-import { addUpdateEvent } from "../../../libs/event-modifiers/addUpdateEvent";
+// import { handleChange } from "../../../libs/event-modifiers/handleChange";
+// import { addUpdateEvent } from "../../../libs/event-modifiers/addUpdateEvent";
 
 
 // Components
 import DropdownList from "../../reusable-components/DropdownList";
-import SelectTime from "./SelectTime";
-import CategoryList from "./CategoryList";
-import TreatmentList from "./TreatmentList";
-import LocationList from "./LocationList";
+
 import Input from "../../reusable-components/Input";
-// import SelectInput from "../../reusable-components/SelectInput";
-import StylistList from "./StylistList";
+
+
 import SaveButton from "../../reusable-components/SaveButton";
 // import CloseFormButton from "../../reusable-components/CloseFormButton";
 
 // Stylesheet
+import styles from "../../../styles/locations/AddLocation.module.css"
 // import styles from "../../../styles/locations/AddLocation.module.css"
 // import SuccessFailMessage from "../../reusable-components/SuccessFailMessage";
 
 
 
 
-export default function AddEvent ({ 
-    treatmentInfo, setTreatmentInfo, isAddingUpdating, setIsAddingUpdating, displayHideTreatmentForm 
+export default function AddEvent ({
+    locations,
+    categories,
+    treatments, 
+    eventInfo, 
+    setEventInfo, 
+    isAddingUpdating, 
+    setIsAddingUpdating, 
+    validationError,
+    addUpdateEvent 
 }) {
 
-    const [successFailMessage, setSuccessFailMessage] = useState("");
-    const [validationError, setValidationError] = useState(false);
 
+    const [newTreatments, setNewTreatments] = useState(null);
+    const [stylists, setStylists] = useState(null);
 
-    const [eventState, setEventState] = useState({
-        locations: [],
-        categories: [],
-        treatments: [],
-        stylists: []
-    });
+   
 
-    const [eventInfo, setEventInfo] = useState({
-        eventId: "",
-        eventDate: null,
-        // Set inital values of start and end time with the first item of times array. If user forgets to pick the times
-        // then setting the initial values will make sure that an error message is shown to the user.  
-        startTime: times[0],
-        endTime: times[0],
-        treatmentCategory: "",
-        treatmentName: "",
-        stylist: "",
-        stylistEmail: "",
-        eventLocation: "",
-        eventDuration: 0,
-        clientName: "",
-        clientEmail: "",
-        clientPhone: "",
-        eventDescription: "",
-        eventPrice: ""
-    });
-    
+    function dateOnChange(date) {
 
-    useEffect(() => {
-
-
-        axios.get("http://localhost:7070/api/locations")
-            .then(response => {
-                setEventState(currentVal => {
-                    return { ...currentVal, locations: response.data};
-                })
-
-                if(response.data.length) {
-
-                    setEventInfo(currentVal => {
-                        return {
-                            ...currentVal, 
-                            eventLocation: response.data[0].title
-                        }
-                    });
-                }
-            })
-            .catch(error => alert(error.response.data.msg));
-
+        return setEventInfo(currentVal => {
+            return {
+                ...currentVal,
+                eventDate: date
+            };
+        });
         
 
+    }
 
-        // System will let user select category from the dropdown. So fetch all the categories and update the state
-        axios.get("http://localhost:7070/api/categories")
-            .then(response => {
+    function handleChange(event) {
 
-                const newCategories = response.data;
+        const name = event.target.name;
+        const value = event.target.value;
 
-                setEventState(currentVal => {
+        // If user is selecting/unselecting a category
+        if(name === "treatmentCategory") {
+
+            // If user is unselecting the category
+            if(!value) {
+                // After selecting the category user might also have selected a treatment and a stylist. If user has 
+                // selected a treatment then values of eventDuration and eventPrice have also been updated with
+                // duration and price info of the treatment. So they all must be blank again now. 
+                setEventInfo(currentVal => {
                     return {
                         ...currentVal,
-                        categories: newCategories
+                        treatmentCategory: value,
+                        treatmentName: "",
+                        stylist: "",
+                        eventDuration: 0,
+                        eventPrice: 0
                     };
                 });
 
-                // Fetch treatments based on category and stylists based on treatments. Intial values of treatment dropdown
-                // will bebased on first category of the category dropdown. Initial values of stylist dropdown will be based 
-                // on first treatment of the treatment dropdown.
-                const endpoint = "http://localhost:7070/api/treatments/find-by-category"
+                // Hide the treatment and stylist list after user's unselecting the category 
+                setNewTreatments(null);
+                return setStylists(null);
 
-                axios.post(endpoint, {category: newCategories[0].title})
-                .then(newResponse => {
+            } 
 
-                    const newTreatments = newResponse.data.treatments;
-                    const newStylists = newTreatments[0].stylists;
+            // if user is selecting a category then filter the treatments list with the category value 
+            const filteredTreatments = treatments.filter(treatment => treatment.category === value);
 
-                    setEventState(currentVal => {
-                        return {
-                            ...currentVal,
-                            treatments: newTreatments,
-                            stylists: newStylists
-                        };
+            // And update the new treatment list with the values that match with the user's selected category
+            setNewTreatments(filteredTreatments);
+
+            // Finally update the eventState with the category value
+            return setEventInfo(currentVal => {
+                return {
+                    ...currentVal,
+                    treatmentCategory: value
+                };
+            });
+
+        }
+
+        // If user is selecting/unselecting a treatment
+        if(name === "treatmentName") {
+
+            // if user is unselecting a treatment
+            if(!value) {
+
+                // After selecting the treatment user might also have selected a stylist. And after selecting the treatment
+                // eventState's eventDuration and eventPrice were also updated with the values of the selected treatment's
+                // duration and price. So they all must be blank again now. 
+                setEventInfo(currentVal => {
+                    return {
+                        ...currentVal,
+                        treatmentName: value,
+                        eventDuration: 0,
+                        eventPrice: 0,
+                        stylist: ""
+                    };
+                });
+
+                // Hide the stylist list after user's unselecting the treatment
+                return setStylists(null);
+
+            }
+
+            // If user is selecting a treatment
+
+            // Find the treatment from the initially fetched master treatment list. We need to update the stylists,
+            // eventDuration and eventPrice with the values of stylists, duration and price of the found treatment
+            for(let x = 0; x < treatments.length; x++) {
+
+                if(treatments[x].title === value) {
+
+                    // DropdownList's map function loops through an array of objects. But found treatment's stylist
+                    // list is an array of strings. So we need to create a new array of objects to feed the DropdownList
+                    const newStylists = [];
+
+                    treatments[x].stylists.forEach(stylist => {
+                        newStylists.push({ id: stylist, stylist });
                     });
-                
+                   
+                    // Now update the stylist list with the newly created array of objects
+                    setStylists(newStylists);
 
-                    // If user is okay with first category of the category dropdown and first treatment of the treatment 
-                    // dropdown and first stylist of the stylist dropdown then he/she won't bother to change any of the 
-                    // three. In that case update the eventInfo state with the first category, first treatment and first
-                    // stylist and first treatment's duration
+                    // After that update eventInfo state with the values of selected treatment and selected treatment's
+                    // duration and price info
                     setEventInfo(currentVal => {
                         return {
-                            ...currentVal, 
-                            treatmentCategory: newCategories[0].title,
-                            treatmentName: newTreatments[0].title,
-                            stylist: newStylists[0],
-                            eventDuration: newTreatments[0].duration
-                        }
+                            ...currentVal,
+                            treatmentName: value,
+                            eventDuration: treatments[x].duration,
+                            eventPrice: treatments[x].price
+                        };
                     });
 
-                })
-                .catch(err => alert(err.response.data.msg))
+                    // We are done, break the loop
+                    break;
+                }
+            }
 
-            })
-            .catch(err => alert(err.response.data.msg))
-        
-            
-    }, []);
+        }
 
 
-
-
-    function handleDropdownOnchange(event) {
-
-        eventInfoOnChange(event, setEventInfo, eventState, setEventState);
+        // If name is not treatmentCategory or treatmentName then update the state with name value pairs
+        setEventInfo(currentVal => {
+            return {
+                ...currentVal,
+                [name]: value
+            };
+        });
 
     }
         
@@ -161,53 +182,71 @@ export default function AddEvent ({
     return (
 
         // Styles are in globals.css
-        <div className="add_event">
-
-            <DatePicker selected={eventInfo.eventDate} onChange={date => eventInfoOnChange(date, setEventInfo)} />
-            <SelectTime
-                label = "Start Time"
-                name = "startTime" 
-                value = {eventInfo.startTime}
-                times = {times}
-                setEventInfo = {setEventInfo}
-                eventInfoOnChange = {eventInfoOnChange}
-            />
-
-            {/* <DropdownList
-                name = "treatmentCategory"
-                nameKey = "title" 
-            /> */}
-
-            <CategoryList 
-                eventState = {eventState}
-                setEventState = {setEventState}
-                eventInfo = {eventInfo}
-                setEventInfo = {setEventInfo}
-                eventInfoOnChange = {eventInfoOnChange}
-            />
-
-            <TreatmentList 
-                eventState = {eventState}
-                setEventState = {setEventState}
-                eventInfo = {eventInfo}
-                setEventInfo = {setEventInfo}
-                eventInfoOnChange = {eventInfoOnChange}
-            />
-
-            <StylistList 
-                eventState = {eventState}
-                eventInfo = {eventInfo}
-                setEventInfo = {setEventInfo}
-                eventInfoOnChange = {eventInfoOnChange}
-            />
-
+        <form className="add_location" method="post" style = {{ display: isAddingUpdating ? "block" : "none"}}>
             
-            <LocationList 
-                eventState = {eventState}
-                eventInfo = {eventInfo}
-                setEventInfo = {setEventInfo}
-                eventInfoOnChange = {eventInfoOnChange}
-            />  
+            <label>Pick a date</label>
+            <DatePicker selected = {eventInfo.eventDate} onChange={dateOnChange} />
+
+            {/* styles are in globals.css */}
+            <div className="dropdown_input">
+                <label>Select a location</label>
+                <DropdownList 
+                    name = "eventLocation"
+                    nameKey = "title"
+                    blankOptionValue = "Choose location"
+                    data = {locations}
+                    handleDropdownOnchange = {handleChange}
+                />
+            </div>
+
+            <div className="dropdown_input">
+                <label>Select a Category</label>
+                <DropdownList 
+                    name = "treatmentCategory"
+                    nameKey = "title"
+                    blankOptionValue = "Choose category"
+                    data = {categories}
+                    handleDropdownOnchange = {handleChange}
+                />
+            </div>
+            {
+                newTreatments && 
+                <div className="dropdown_input">
+                    <label>Select treatment</label>
+                    <DropdownList 
+                        name = "treatmentName"
+                        nameKey = "title"
+                        blankOptionValue = "Choose treatment"
+                        data = {newTreatments} 
+                        handleDropdownOnchange = {handleChange}
+                    />
+                </div>
+            }
+
+            {
+                stylists &&
+                <div className="dropdown_input">
+                    <label>Select stylist</label>
+                    <DropdownList 
+                        name = "stylist"
+                        nameKey = "stylist"
+                        blankOptionValue = "Choose stylist"
+                        data = {stylists} 
+                        handleDropdownOnchange = {handleChange}
+                    />
+                </div>
+            }
+
+            <div className="dropdown_input">
+                <label>Select the start time</label>
+                <DropdownList 
+                    name = "startTime"
+                    nameKey = "time"
+                    blankOptionValue = "Choose start time"
+                    data = {times}
+                    handleDropdownOnchange = {handleChange}
+                />
+            </div>
 
             <Input 
                 label = "Client Name"
@@ -216,7 +255,7 @@ export default function AddEvent ({
                 setData = {setEventInfo}
                 value = {eventInfo.clientName}
                 placeholder = "grace heart"
-                onChange = {eventInfoOnChange}
+                onChange = {handleChange}
                 error = {validationError}
             />
 
@@ -227,7 +266,7 @@ export default function AddEvent ({
                 setData = {setEventInfo}
                 value = {eventInfo.clientEmail}
                 placeholder = "grace.heart@abc.com"
-                onChange = {eventInfoOnChange}
+                onChange = {handleChange}
                 error = {validationError}
             />
 
@@ -238,7 +277,7 @@ export default function AddEvent ({
                 setData = {setEventInfo}
                 value = {eventInfo.clientPhone}
                 placeholder = "+88 01717062884"
-                onChange = {eventInfoOnChange}
+                onChange = {handleChange}
                 error = {validationError}
             />
 
@@ -249,22 +288,18 @@ export default function AddEvent ({
                 setData = {setEventInfo}
                 value = {eventInfo.eventDescription}
                 placeholder = "anything"
-                onChange = {eventInfoOnChange}
+                onChange = {handleChange}
                 error = {validationError}
             />
 
-            <Input 
-                label = "Event Price"
-                type = "number"
-                name = "eventPrice"
-                setData = {setEventInfo}
-                value = {eventInfo.eventPrice}
-                placeholder = ""
-                onChange = {eventInfoOnChange}
-                error = {validationError}
-            />
-
-           
+            <button onClick = {event => {
+                event.preventDefault();
+                setIsAddingUpdating(false)}
+            }
+            >
+                Close
+            </button>
+            <button value = {eventInfo.eventId} onClick = {addUpdateEvent}>Save</button>
 
            
            
@@ -280,7 +315,7 @@ export default function AddEvent ({
                 setData = {setTreatmentInfo} 
                 setIsAddingUpdating = {setIsAddingUpdating}
             /> */}
-            <SaveButton
+            {/* <SaveButton
                 // To pass to addUpdateLocation function. Empty string will make http request to backend at 
                 // add_location endpoint, else update request will be made to backend 
                 _id = {eventInfo.eventId} 
@@ -288,7 +323,7 @@ export default function AddEvent ({
                 setError = {setValidationError} 
                 setSuccessFailMessage = {setSuccessFailMessage}
                 addNewItem = {addUpdateEvent} 
-            />
-        </div>
+            /> */}
+        </form>
     );
 }
