@@ -29,20 +29,10 @@
       "static/chunks/main.js",
       "static/chunks/pages/admins/events.js"
     ],
-    "/admins/locations": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/admins/locations.js"
-    ],
     "/admins/stylists": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/admins/stylists.js"
-    ],
-    "/stylists/[stylistId]": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/stylists/[stylistId].js"
     ]
   },
   "ampFirstPages": []

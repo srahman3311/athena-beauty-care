@@ -218,7 +218,7 @@ export default function Events () {
 
     
     return (
-        <div className="events" style = {{display: "flex", position: "relative", height: "100vh"}}>
+        <div className="events" style = {{display: "flex", position: "relative", height: "100vh", overflow: "hidden"}}>
             <ControlPanel />
             <div className="content" style = {{width: "100%"}}>
             
