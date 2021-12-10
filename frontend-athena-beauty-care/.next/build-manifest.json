@@ -24,15 +24,15 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/admins/events": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/admins/events.js"
-    ],
     "/admins/stylists": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/admins/stylists.js"
+    ],
+    "/stylists/[stylistId]": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/stylists/[stylistId].js"
     ]
   },
   "ampFirstPages": []

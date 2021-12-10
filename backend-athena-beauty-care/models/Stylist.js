@@ -12,10 +12,12 @@ const workScheduleSchema = new mongoose.Schema({
 const stylistSchema = new mongoose.Schema({
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
+    username: { type: String, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },
     status: { type: String, required: true },
     imageFilename: { type: String },
+    imageUrl: { type: String },
     refreshToken: { type: String },
     workSchedule: [workScheduleSchema]
 });
@@ -72,6 +74,7 @@ bcrypt.genSalt(10, (err, salt) => {
     let newStylist = new Stylist({
         firstName: "Jennifer",
         lastName: "Gorgeous",
+        username: "athena123",
         email: "jennifer.gorgeous@gmail.com",
         password: "jennifer123",
         status: "active",

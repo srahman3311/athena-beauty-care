@@ -2,8 +2,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import useAxios from "../../libs/useAxios";
-import { addWorkSchedule } from "../../libs/stylist-modifiers/addWorkSchedule";
-import { removeWorkSchedule } from "../../libs/stylist-modifiers/removeWorkSchedule";
 import { addUpdateStylist } from "../../libs/stylist-modifiers/addUpdateStylist";
 import { times, daysOfTheWeek, stylistDataTableHeaders } from "../../libs/data";
 
@@ -17,11 +15,17 @@ import DropdownList from "../../components/reusable-components/DropdownList";
 import Input from "../../components/reusable-components/Input";
 import SaveButton from "../../components/reusable-components/SaveButton";
 import AddStylist from "../../components/admins/stylists/AddStylist";
+import SearchInput from "../../components/reusable-components/SearchInput";
+import Message from "../../components/reusable-components/Message";
+import NextPrevItems from "../../components/reusable-components/NextPrevItems";
+import NextPrevView from "../../components/reusable-components/NextPrevView";
 
 
 export default function Stylists () {
 
-    const [state, setState] = useState({
+    const [happening, setHappening] = useState("Fetching");
+    const [actionMessage, setActionMessage] = useState(null);
+    const [stylistState, setStylistState] = useState({
         searchText: "",
         skip: 0,
         limit: 20,
@@ -30,35 +34,42 @@ export default function Stylists () {
 
     //Custom hook call to fetch data
     const endpoint = "http://localhost:7070/api/stylists";
-    const requestBody = { searchText: state.searchText, skip: state.skip, limit: state.limit };
-    const { data, totalDataCount, error, loading } = useAxios("post", endpoint, requestBody);
+    const requestBody = { searchText: stylistState.searchText, skip: stylistState.skip, limit: stylistState.limit };
+    const { data, totalDataCount, error, loading } = useAxios("post", endpoint, requestBody, happening);
 
-
+    const [isAddingUpdating, setIsAddingUpdating] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [stylists, setStylists] = useState([]);
+    const [stylistTableData, setStylistTableData] = useState([]);
     const [stylistInfo, setStylistInfo] = useState({
         firstName: "",
         lastName: "",
+        username: "",
         email: "",
         password: "",
         password2: ""
     });
+    const [workSchedules, setWorkSchedules] = useState([]);
+    
    
-    const [addedWorkSchedules, setAddedWorkSchedules] = useState([]);
-
 
     useEffect(() => {
+
+        setHappening("fetching");
         
         const newData = [];
 
         if(data !== null) {
+
+            setStylists(data);
 
             data.forEach((stylist, index) => {
                 newData.push({
                     id: index + 1,
                     data: [
                         stylist.firstName, 
-                        stylist.lastName, 
+                        stylist.lastName,
+                        stylist.username, 
                         stylist.email, 
                         stylist.status,
                         `http://localhost:3000/stylists/${stylist._id.toString()}`
@@ -67,32 +78,94 @@ export default function Stylists () {
             });
         }
 
-        setStylists(newData);
+        setStylistTableData(newData);
 
-    }, [data, state.searchText, state.skip, state.limit])
+        setStylistState(currentValue => {
+            return {
+                ...currentValue,
+                dataLength: totalDataCount
+            };
+        });
+
+        
+
+    }, [data, happening])
+
+
+
+    function fetchNextPrevItems(event) {
+
+        const newSkip = Number(event.target.value);
+
+        setStylistState(currentValue => {
+
+            return {
+                ...currentValue,
+                skip: newSkip
+            };
+        });
+
+        setHappening("refetching after next button clicked");
+
+    }
+    
 
     return (
 
-        <div className={styles.stylists}>
+        <div className={styles.stylists} style = {{position: "relative", overflow: "hidden"}}>
             <ControlPanel />
 
-            <div className="table" style = {{display: showModal ? "none" : "block", width: "100%", height: "100%"}}>
-                <button onClick = {() => setShowModal(true)}>Add Stylist</button>  
-                <DataTable
-                    tableHeaders = {stylistDataTableHeaders} 
-                    tableData = {stylists}
-                />
-            </div>
+            <div className="stylist_content" style = {{width: "100%"}}>
+               
+                <div className="table_and_form">
 
-            <AddStylist 
-                showModal = {showModal} 
-                setShowModal = {setShowModal}
-                stylistInfo = {stylistInfo} 
-                setStylistInfo = {setStylistInfo} 
-            />
+                    <div className="table" style = {{display: showModal ? "none" : "block", width: "100%", height: "100%"}}>
+                        <div className="search_add">
+                            <SearchInput
+                                value = {stylistState.searchText}
+                                setState = {setStylistState}
+                                setHappening = {setHappening}
+                            />
 
-             
+                            {/* <button onClick = {() => setIsAddingUpdating(true)}>Add event</button> */}
+                        </div>
+                        <button onClick = {() => setShowModal(true)}>Add Stylist</button>  
+                        <DataTable
+                            tableHeaders = {stylistDataTableHeaders} 
+                            tableData = {stylistTableData}
+                        />
+                        <NextPrevItems 
+                            state = {stylistState} 
+                            setState = {setStylistState} 
+                            fetchNextPrevItems = {fetchNextPrevItems}
+                        />
+                        <NextPrevView state = {stylistState} />
+                    </div>
+
+                    <AddStylist
+                        imageUrl = ""
+                        stylistId = ""
+                        stylistInfo = {stylistInfo}
+                        setStylistInfo = {setStylistInfo} 
+                        workSchedules={workSchedules}
+                        setWorkSchedules={setWorkSchedules}
+                        showModal = {showModal} 
+                        setShowModal = {setShowModal}
+                        setActionMessage = {setActionMessage} 
+                        setHappening = {setHappening}
+                    />
+                  
+                </div>
+           
+
+              
                 
+            </div>
+          
+            <Message 
+                message = {actionMessage} 
+                setActionMessage = {setActionMessage}
+            />
            
         </div>
     );

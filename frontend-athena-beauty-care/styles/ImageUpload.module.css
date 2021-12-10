@@ -1,0 +1,272 @@
+.admin_list {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    background-color: rgba(204, 204, 204, 0.178);
+}
+
+.admin_list_content {
+    width: 100%;
+    height: 95%;
+    display: flex;
+}
+
+.list_content {
+    width: 90%;
+    padding: 15px 20px;
+    
+}
+
+.view_search_add {
+    /* background-color: chocolate; */
+    /* padding: 0px 20px; */
+    width: 100%;
+    height: 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.list {
+    width: 100%;
+    height: 90%;
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.397);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+
+.admin_list_header {
+    background-color: #334257ab;
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
+}
+
+.admin_list_header, .admin_list_body {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.062);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin_list_header p {
+    color: white;
+}
+
+.admin_list_header p, .admin_list_body p {
+    width: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.9rem;
+    padding: 20px 0px;
+}
+
+.admin_list_body a {
+    text-decoration: underline;
+}
+
+
+
+
+
+
+
+/* Search */
+.search input[type=text] {
+    border: none;
+    background: none;
+    font-size: 1rem;
+    padding-bottom: 2px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.103);
+}
+
+.search input[type=text]:focus {
+    outline: none;
+}
+
+
+
+
+
+
+
+/* Admin Add Form */
+.admin_add_form {
+    position: relative;
+    width: 90%;
+    height: 100%;
+    padding: 2%;
+    display: flex;
+    align-items: flex-start;
+    background-color: #4a47a3b9;
+    /* background-image: linear-gradient(#4A47A3, #4a47a3d7, #4a47a35d); */
+}
+
+.buttons {
+    position: absolute;
+    bottom: 5%;
+    right: 5%;
+    /* width: 100%; */
+    /* background-color: bisque; */
+}
+
+.buttons button {
+    margin-left: 10px;
+}
+
+.admin_add_form > div {
+    /* padding: 2%; */
+    
+}
+
+.profile_picture {
+    width: 40%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.767);
+    /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
+    /* padding: 10px 20px; */
+}
+
+.image_uploader, .user_info_container {
+    width: 100%;
+    height: 100%;
+    
+    /* background-image: linear-gradient(#035397,#03529767); */
+    /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
+    padding: 10px;
+    /* border-radius: 10px; */
+}
+
+.user_info {
+    width: 60%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.692);
+    /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
+    /* padding: 10px 20px; */
+}
+
+.admin_add_form h3 {
+    display: block;
+    padding-bottom: 2px;
+    margin-bottom: 10px;
+    /* margin-top: 10px; */
+    border-bottom: 1px solid rgba(0, 0, 0, 0.096);
+}
+
+.basic_info_inputs, .email_inputs, .password_inputs {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.input {
+    max-width: 30%;
+    padding: 0px;
+    margin-right: 10px;
+}
+
+.input input[type=text], .input input[type=email], .input input[type=password] {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.212);
+    padding: 2px 5px;
+    background-color: #C9D8B6;
+    font-size: 1rem;
+}
+
+.input input[type=text]:focus, .input input[type=email]:focus, .input input[type=password]:focus {
+    outline: none;
+}
+
+.admin_add_form button {
+    margin-top: 20px;
+}
+
+
+
+.image_uploader {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+
+.image_preview {
+    width: 85%;
+    height: 70%;
+    position: absolute;
+    left: 50%;
+    top: 45%;
+    transform: translate(-50%, -50%);
+}
+  
+.image_file_input {
+    width: 85%;
+    height: 10%;
+    position: absolute;
+    left: 50%;
+    top: 90%;
+    transform: translate(-50%, -50%);
+}
+  
+.image_file_input input[type=file] {
+    display: block;
+    cursor: pointer;
+    width: 100%;
+    height: 50%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 1; /* z-index will move the input element to the top of other element and opacity 0 will make it invisible */
+    opacity: 0; /* Opacity is the trum card here. Opacity zero will render the input element invisible */
+    border: 1px solid red;
+}
+  
+  .image_filename, .image_upload_button {
+    font-size: 0.7rem;
+    height: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.267);
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: 5px;
+  
+  }
+  
+  .image_filename {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    color: black;
+    font-size: 0.7rem;
+    overflow: hidden;
+  }
+  
+  .image_upload_button {
+    position: absolute;
+    width: 25%;
+    left: 75%;
+    top: 0;
+    background-color:#FFEBC9;
+    color: black;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* color: rgba(255, 255, 255, 0.685); */
+    font-size: 0.7rem;
+  }
+  
+  .image_preview img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+  }

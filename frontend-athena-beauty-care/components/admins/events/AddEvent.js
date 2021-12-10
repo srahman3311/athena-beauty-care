@@ -62,8 +62,8 @@ export default function AddEvent ({
 
     function handleChange(event) {
 
-        const name = event.target.name;
-        const value = event.target.value;
+        // Destructuring event.target
+        const { name, value } = event.target;
 
         // If user is selecting/unselecting a category
         if(name === "treatmentCategory") {

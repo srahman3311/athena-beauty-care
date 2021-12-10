@@ -72,9 +72,6 @@ export default function Events () {
     const [events, setEvents] = useState([]);
     const [eventTableData, setEventTableData] = useState([]);
     const [actionMessage, setActionMessage] = useState(null);
-    const [showDeletePrompt, setShowDeletePrompt] = useState(false);
-    const [eventIdForDeleting, setEventIdForDeleting] = useState("");
-    const [itemNameForDeletePrompt, setItemNameForDeletePrompt] = useState("");
     const [validationError, setValidationError] = useState(false);
     const [eventId, setEventId] = useState("");
     const [isAddingUpdating, setIsAddingUpdating] = useState(false);
@@ -126,8 +123,7 @@ export default function Events () {
                         event.endTime.substring(event.endTime.indexOf("T") + 1, event.endTime.length),
                         event.clientEmail,
                         event.status,
-                        `View Details-${event._id.toString()}`,
-                        // `Delete-${event._id.toString()}`
+                        `View Details-${event._id.toString()}`
                     ]
 
                 });
@@ -191,10 +187,10 @@ export default function Events () {
             setActionMessage(error.response.data.msg);
     
         } finally {
+            
             setHappening("refetching afer adding")
         }
     
-
         
     }
 
@@ -234,18 +230,7 @@ export default function Events () {
                     validationError = {validationError}
                 />
 
-                {/* <div className="search_add">
-                    <SearchInput
-                        state = {state}
-                        setState = {setEventState}
-                        searchData = {searchTreatments} 
-                    />
-                    <DisplayFormButton
-                        text = "Add Event" 
-                        displayHideForm = {displayHideEventForm}
-                        setIsAddingUpdating = {setIsAddingUpdating} 
-                    />
-                </div> */}
+              
                 <div className="search_add">
                     <SearchInput
                         value = {eventState.searchText}
@@ -255,8 +240,6 @@ export default function Events () {
 
                     <button onClick = {() => setIsAddingUpdating(true)}>Add event</button>
                 </div>
-
-                {/* <button>Add Event</button> */}
 
                 <DataTable
                     tableHeaders = {eventsDataTableHeaders} 

@@ -46,7 +46,7 @@ export const categoryDataTableHeaders = ["Title", "Action", "Delete"];
 
 export const treatmentDataTableHeaders = ["Category", "Title", "Description", "Duration", "Price", "Remarks", "Action", "Delete"];
 
-export const stylistDataTableHeaders = ["First Name", "Last Name", "Email", "Password", "Details"];
+export const stylistDataTableHeaders = ["First Name", "Last Name", "Username", "Email", "Status", "Details"];
 
 export const eventsDataTableHeaders = [
     "Location", "Category", "Treatment", "Stylist", "Event Date", "Start Time", "End Time", "Client", "Status", "Action"
