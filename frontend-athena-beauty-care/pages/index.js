@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import useAxios from "../components/clients/libs/useAxios";
 
+
 // Stylesheet
 import styles from "../styles/Home.module.css";
 
@@ -18,6 +19,7 @@ import Confirmation from "../components/clients/confirmation-page/Confirmation";
 
 
 export default function Home () {
+
 
     // Other states
     const [selectedTreatments, setSelectedTreatments] = useState([]);
@@ -161,6 +163,36 @@ export default function Home () {
     }
 
 
+    function selectTreatment(event, treatments) {
+
+        const treatmentTitle = event.target.textContent;
+
+        // loop through the already selected treatments to see if clicked one exists or not. It returns either true or false
+        const doesExist = selectedTreatments.some(newItem => newItem.title === treatmentTitle);
+
+
+        if(doesExist) {
+
+            const filteredSelectedTreatments = selectedTreatments.filter(treatment => treatment.title !== treatmentTitle);
+            setSelectedTreatments(filteredSelectedTreatments);
+        } else {
+
+            for(let x = 0; x < treatments.length; x++) {
+
+                if(treatments[x].title === treatmentTitle) {
+
+                    setSelectedTreatments(currentValue => { return [...currentValue, treatments[x]] });
+                    break;
+                }
+            }
+        }
+
+    }
+
+    
+
+    // console.log(locationData);
+
     // if(locationDataLoading || categoryDataLoading || treatmentDataLoading) {
     //     return (<div>Loading....</div>);
     // }
@@ -187,6 +219,7 @@ export default function Home () {
                 activeTreatment = {activeTreatment}
                 changeActiveTreatment = {changeActiveTreatment} 
                 changeActiveCategory = {changeActiveCategory}
+                selectTreatment = {selectTreatment}
             />
 
            
@@ -196,6 +229,7 @@ export default function Home () {
                 state = {state} 
                 activePage = {activePage}
                 updateState = {updateState} 
+                location = {state.location}
                 selectedTreatments = {selectedTreatments}
             />
 

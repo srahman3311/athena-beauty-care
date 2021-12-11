@@ -4,15 +4,33 @@ import styles from "../../../styles/DateTime.module.css";
 
 
 
-export default function DateCard ({ date }) {
+export default function DateCard ({ date,  activeDate, setActiveDate, choosenTime }) {
+
+    
 
     return (
 
-        <div className={styles.dateCard_container}>
+        <div 
+            className={styles.dateCard_container}
+            
+        >
+
+            <div
+                onClick={event => setActiveDate(event.target.textContent)} 
+                className={styles.dateHidden_div}
+            >
+                {date.date}-{date.month.toLowerCase()}
+            </div>
+
             <div 
                 className={styles.date_card} 
                 style ={{
-                    backgroundImage: date.weekDay === "Today" && "linear-gradient(rgb(255,0,0, 0.4), rgb(0,0,255, 0.9), darkblue)"
+                    backgroundImage: activeDate === `${date.date}-${date.month.toLowerCase()}` 
+                    ? 
+                    "linear-gradient(to left, green, rgba(0, 0, 139, 0.4))"
+                    :
+                    choosenTime === `${date.date}-${date.month.toLowerCase()}` && 
+                    "linear-gradient(rgb(255,0,0, 0.4), rgb(0,0,255, 0.9), darkblue)"
                 }}
             >
                 <p className={styles.weekDay_text}>{date.weekDay}</p>

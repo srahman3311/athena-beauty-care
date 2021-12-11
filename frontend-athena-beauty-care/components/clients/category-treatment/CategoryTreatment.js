@@ -19,7 +19,8 @@ export default function CategoryTreatment ({
     activeTreatment, 
     changeActiveTreatment, 
     selectedTreatments,
-    addTreatment 
+    addTreatment,
+    selectTreatment 
 }) {
 
     const {
@@ -54,9 +55,9 @@ export default function CategoryTreatment ({
     //     return (<div>Loading....</div>);
     // }
 
-    if(categoryDataFetchingError || treatmentDataFetchingError) {
-        return (<div>Something went wrong</div>);
-    }
+    // if(categoryDataFetchingError || treatmentDataFetchingError) {
+    //     return (<div>Something went wrong</div>);
+    // }
    
     return (
         <div className={styles.category_treatment} style = {{display: activePage === 2 ? "block" : "none"}}>
@@ -95,6 +96,8 @@ export default function CategoryTreatment ({
                                 changeActiveTreatment = {changeActiveTreatment}
                                 selectedTreatments = {selectedTreatments}
                                 addTreatment = {addTreatment}
+                                treatments = {treatments}
+                                selectTreatment = {selectTreatment}
                             />
                             
                         );

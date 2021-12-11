@@ -10,9 +10,9 @@ const defaultTimesArray = [
     "16:00", "16:15", "16:30", "16:45", "17:00"
 ]
 
-export const findTimeSlots = async () => {
+export const findTimeSlots = async (newTreatments) => {
 
-
+    /*
     const newTreatments = [
         {
             category: "Permanent Makeup",
@@ -40,6 +40,7 @@ export const findTimeSlots = async () => {
         }
 
     ];
+    */
 
 
     // Calculate total 30 dates in the format 'year-month-date' format starting from today
@@ -265,23 +266,25 @@ export const findTimeSlots = async () => {
 
     console.log(qqq);
 
+    const dateTimesArray = [];
 
-    
-    
+    qqq.forEach((dateTimes, index) => {
 
+        const newDate = new Date(dateTimes.date);
 
+        const date = newDate.getDate();
+        const weekDay = newDate.toLocaleString("en-us", {  weekday: "short" });
+        const month = newDate.toLocaleString("en-us", { month: "short" });
 
+        dateTimesArray.push({
+            date: {date, weekDay, month},
+            times: dateTimes.times
+        });
 
+        
+    });
 
-
-
-
-
-
-
-
-    return;
-
+    return dateTimesArray;
 
 
 

@@ -2,13 +2,23 @@ import { useState, useEffect } from "react";
 
 // Stylesheet
 import styles from "../../../styles/CategoryTreatment.module.css";
+import clientGlobalStyles from "../../../styles/client-ui/ClientGlobals.module.css"
 
 // Components
 import EventHandlerDiv from "../client-reusable-components/EventHandlerDiv";
 
 
 
-export default function Treatment ({ item, activeCategory, activeTreatment, changeActiveTreatment, selectedTreatments, addTreatment }) {
+export default function Treatment ({ 
+    item, 
+    activeCategory, 
+    activeTreatment, 
+    changeActiveTreatment, 
+    selectedTreatments, 
+    addTreatment,
+    selectTreatment,
+    treatments 
+}) {
 
     
 
@@ -24,14 +34,17 @@ export default function Treatment ({ item, activeCategory, activeTreatment, chan
                 display: activeCategory === item.category ? "block" : "none",
             }}
         >
-            <EventHandlerDiv 
+            {/* <EventHandlerDiv 
                 content = {`${item.title}, ${item.duration}, ${item.price}`} 
                 clickEventHandler = {changeActiveTreatment} 
-            />
+            /> */}
+            <div className={clientGlobalStyles.eventHandler_div} onClick = {event => selectTreatment(event, treatments)}>
+                {item.title}
+            </div>
 
 
 
-            <div className={styles.stylists} style = {{display: item.title === activeTreatment ? "block" : "none"}}>
+            {/* <div className={styles.stylists} style = {{display: item.title === activeTreatment ? "block" : "none"}}>
                 <p>Select a stylist</p>
                 <ul className={styles.stylist_list} >
                     <li className={styles.stylistList_item} onClick = {e => addTreatment(e.target.textContent, item)}></li>
@@ -52,7 +65,7 @@ export default function Treatment ({ item, activeCategory, activeTreatment, chan
                         );
                     })}
                 </ul>
-            </div>
+            </div> */}
 
 
 
@@ -64,7 +77,7 @@ export default function Treatment ({ item, activeCategory, activeTreatment, chan
                     "linear-gradient(to left, darkblue, rgba(0, 0, 139, 0.4))" 
                     :
                     selectedTreatments.some(
-                        x => x.treatmentTitle === item.title
+                        x => x.title === item.title
                     ) && "linear-gradient(to left, red, rgba(0, 0, 139, 0.4))"
                 }}
             >

@@ -4,6 +4,8 @@ import axios from "axios";
 
 export default function useAxios(method, url, body, happening) {
 
+    //console.log(url);
+
     // // Need to put following three in the useEffect's dependecy array to allow for dynamic data fetching based on user's 
     // // search input, navigation to previous and next items.
     // let searchText = "";
@@ -37,7 +39,7 @@ export default function useAxios(method, url, body, happening) {
         
             const newData = await response.data;
 
-            console.log(newData);
+            //console.log(newData);
 
             // If data are being fetched with get method then an array of json objects has been sent from backend
             if(Array.isArray(newData)) return setData(newData);
@@ -74,7 +76,7 @@ export default function useAxios(method, url, body, happening) {
 
     }, [url, happening]); 
 
-    console.log(data);
+    //console.log(data);
 
     return { data, totalDataCount, error, loading };
 

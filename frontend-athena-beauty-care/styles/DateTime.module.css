@@ -1,3 +1,35 @@
+.dateHidden_div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  z-index: 1;
+  cursor: pointer;
+}
+
+.available_time_list {
+  display: flex;
+  justify-content: flex-start;
+  background-color: #ccc;
+}
+
+.time {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  padding: 10px;
+}
+
+.individual_time {
+  padding: 10px;
+  background-image: linear-gradient(#ee7700c4, #EE7600, #ee7700de);
+  color: white;
+  margin: 5px;
+  cursor: pointer;
+}
+
 .date_time {
   width: 100%;
   padding-bottom: 10px;
