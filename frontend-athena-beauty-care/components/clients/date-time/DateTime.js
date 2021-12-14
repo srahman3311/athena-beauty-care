@@ -20,13 +20,23 @@ import ItemHeader from "../client-reusable-components/ItemHeader";
 
 
 
-export default function DateTime ({ state, activePage, selectedTreatments, location }) {
+export default function DateTime ({ 
+    state, 
+    activePage, 
+    selectedTreatments, 
+    setSortedSelectedTreatments,
+    location,
+    selectedDate,
+    setSelectedDate,
+    selectedTime,
+    setSelectedTime 
+}) {
 
     const [dates, setDates] = useState([]);
     const [dateTimes, setDateTimes] = useState([]);
-    const [activeDate, setActiveDate] = useState("");
+    
     const [dateIndex, setDateIndex] = useState(0);
-    const [choosenTime, setChoosenTime] = useState("");
+   
 
 
 
@@ -36,15 +46,18 @@ export default function DateTime ({ state, activePage, selectedTreatments, locat
 
     }, [])
 
-    console.log(choosenTime);
+  
+    console.log(dateTimes);
+    console.log(selectedTime);
     return (
         <div className={styles.date_time} style = {{display: activePage === 3 ? "block" : "none"}}>
 
             <ChooseStylists 
                 selectedTreatments = {selectedTreatments} 
+                setSortedSelectedTreatments = {setSortedSelectedTreatments}
                 location = {location} 
                 setDateTimes = {setDateTimes}
-                setActiveDate = {setActiveDate}
+                setSelectedDate = {setSelectedDate}
             />
             <Script src="https://kit.fontawesome.com/14ab8b126d.js" crossorigin="anonymous" />
             <ItemHeader content = "Select date/time" />
@@ -69,10 +82,10 @@ export default function DateTime ({ state, activePage, selectedTreatments, locat
                             return (
                                 <DateCard 
                                     key = {index + 1} 
-                                    date = {dateTime.date}
-                                    activeDate = {activeDate}
-                                    setActiveDate = {setActiveDate} 
-                                    choosenTime = {choosenTime.substring(0, 6)}
+                                    dateTime = {dateTime}
+                                    selectedDate = {selectedDate}
+                                    setSelectedDate = {setSelectedDate} 
+                                    selectedTime = {selectedTime}
                                 />
                             );
                         })}
@@ -81,27 +94,30 @@ export default function DateTime ({ state, activePage, selectedTreatments, locat
                     <div className={styles.available_time_list}>
                         {dateTimes.map((dateTime, index) => {
                             return (
+                                
 
                                 <div
                                     className={styles.time} 
                                     key = {`${dateTime.date.date}-${dateTime.date.weekDay}`}
-                                    style = {{display: activeDate === `${dateTime.date.date}-${dateTime.date.month.toLowerCase()}` ? "flex" : "none"}}
+                                    style = {{display: selectedDate === dateTime.dateInDateFormat ? "flex" : "none"}}
                                 >
                                     {dateTime.times.map(time => {
                                         return (
                                             <div key = {time} style={{position: "relative"}}>
                                                 <div
-                                                    onClick={event => setChoosenTime(event.target.textContent)} 
+                                                    onClick = {
+                                                        event => selectedTime === event.target.textContent ? setSelectedTime("") : setSelectedTime(event.target.textContent)
+                                                    } 
                                                     className={styles.dateHidden_div}
                                                 >
-                                                    {`${dateTime.date.date}-${dateTime.date.month.toLowerCase()}-${time}`}
+                                                    {`${selectedDate}T${time}`}
                                                 </div>
 
                                                 <p
                                                    
                                                     className={styles.individual_time}
                                                     style ={{
-                                                        backgroundImage: choosenTime === `${dateTime.date.date}-${dateTime.date.month.toLowerCase()}-${time}` && "linear-gradient(rgb(255,0,0, 0.4), rgb(0,0,255, 0.9), darkblue)"
+                                                        backgroundImage: selectedTime === `${selectedDate}T${time}` && "linear-gradient(rgb(255,0,0, 0.4), rgb(0,0,255, 0.9), darkblue)"
                                                     }}
                                                 >
                                                     {time}
@@ -116,7 +132,7 @@ export default function DateTime ({ state, activePage, selectedTreatments, locat
                     </div>
                    
                 </div>
-               
+                
 
             </div>
 
@@ -126,6 +142,7 @@ export default function DateTime ({ state, activePage, selectedTreatments, locat
                
             </div>
              */}
+            
         </div>
 
 

@@ -16,10 +16,7 @@ export default function CategoryTreatment ({
     activePage, 
     activeCategory, 
     changeActiveCategory, 
-    activeTreatment, 
-    changeActiveTreatment, 
     selectedTreatments,
-    addTreatment,
     selectTreatment 
 }) {
 
@@ -45,10 +42,10 @@ export default function CategoryTreatment ({
     
     
 
-    function addNewTreatment(stylist, treatment) {
-        console.log(stylist);
-        console.log(treatment)
-    }
+    // function addNewTreatment(stylist, treatment) {
+    //     console.log(stylist);
+    //     console.log(treatment)
+    // }
 
    
     // if(categoryDataLoading || treatmentDataLoading) {
@@ -92,10 +89,7 @@ export default function CategoryTreatment ({
                                 key = {index + 1} 
                                 item = {item} 
                                 activeCategory = {activeCategory}
-                                activeTreatment = {activeTreatment}
-                                changeActiveTreatment = {changeActiveTreatment}
                                 selectedTreatments = {selectedTreatments}
-                                addTreatment = {addTreatment}
                                 treatments = {treatments}
                                 selectTreatment = {selectTreatment}
                             />

@@ -12,10 +12,7 @@ import EventHandlerDiv from "../client-reusable-components/EventHandlerDiv";
 export default function Treatment ({ 
     item, 
     activeCategory, 
-    activeTreatment, 
-    changeActiveTreatment, 
     selectedTreatments, 
-    addTreatment,
     selectTreatment,
     treatments 
 }) {
@@ -72,10 +69,7 @@ export default function Treatment ({
             <div 
                 className={styles.treatment_item} 
                 style = {{
-                    backgroundImage: activeTreatment === item.title 
-                    ? 
-                    "linear-gradient(to left, darkblue, rgba(0, 0, 139, 0.4))" 
-                    :
+                    backgroundImage: 
                     selectedTreatments.some(
                         x => x.title === item.title
                     ) && "linear-gradient(to left, red, rgba(0, 0, 139, 0.4))"

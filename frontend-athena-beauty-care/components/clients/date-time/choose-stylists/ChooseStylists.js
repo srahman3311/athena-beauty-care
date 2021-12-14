@@ -7,7 +7,13 @@ import { findTimeSlots } from "../../../../lib/find-time-slots-copy/findTimeSlot
 
 
 
-export default function ChooseStylists ({ location, selectedTreatments, setDateTimes, setActiveDate }) {
+export default function ChooseStylists ({ 
+    location, 
+    selectedTreatments, 
+    setSortedSelectedTreatments,
+    setDateTimes, 
+    setSelectedDate 
+}) {
 
     const styles = {
         width: "60%",
@@ -25,6 +31,8 @@ export default function ChooseStylists ({ location, selectedTreatments, setDateT
     // OnChange handler for stylist
     function finalizeTreatments(event, index) {
 
+        console.log("stylist: " + event.target.value);
+
         // event.target.value contains the stylist
         const stylist = event.target.value;
 
@@ -37,11 +45,13 @@ export default function ChooseStylists ({ location, selectedTreatments, setDateT
         // specific treatment. If user is trying to change the stylist then previous treatment must be ommitted.  
         const doesExist = treatments.some(newItem => newItem.treatmentTitle === newTreatmentTitle);
 
-        if(doesExist) {
+        if(doesExist || !stylist) {
 
             
 
             const filteredTreatments = treatments.filter(item => item.treatmentTitle !== newTreatmentTitle);
+
+            if(!stylist) return setTreatments(filteredTreatments);
 
             const newtreatment = {
 
@@ -92,21 +102,23 @@ export default function ChooseStylists ({ location, selectedTreatments, setDateT
             });
         });
 
+        if(newTreatments.length !== selectedTreatments.length) return alert("Please select a stylist for all treatments");
+
+        setSortedSelectedTreatments(newTreatments);
+
        
         const dateTimes = await findTimeSlots(newTreatments);
 
         setDateTimes(dateTimes);
 
-        const firstDate = dateTimes[0].date.date + "-" + dateTimes[0].date.month.toLowerCase();
-        console.log(firstDate);
-
-        setActiveDate(firstDate);
+    
+        setSelectedDate(dateTimes[0].dateInDateFormat);
 
        
     }
 
 
-
+    console.log(treatments);
 
 
     return (

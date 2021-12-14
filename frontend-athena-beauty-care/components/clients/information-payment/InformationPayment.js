@@ -18,7 +18,7 @@ import ItemHeader from "../client-reusable-components/ItemHeader";
 
 
 
-export default function InformationPayment ({ activePage, clientInfo, clientInfoOnChangeHandler, validationError }) {
+export default function InformationPayment ({ activePage, clientInfo, clientInfoOnChangeHandler, validationError, createBooking }) {
 
     // const [dates, setDates] = useState([]);
 
@@ -101,9 +101,9 @@ export default function InformationPayment ({ activePage, clientInfo, clientInfo
                 <div className={styles.howHeardAboutUs_input} style = {{backgroundColor: "green"}}>
                     <p className={styles.input_label}>How did you hear about athena beauty care?</p>
 
-                    <select name = "howHeardAboutUs">
+                    <select name = "howHeardAboutUs" onChange={clientInfoOnChangeHandler}>
                         <option value = "Friends">Friends</option>
-                        <option value = "others">Friends</option>
+                        <option value = "others">Others</option>
                     </select>
                     {/* <Input
                         type = "text"
@@ -122,6 +122,7 @@ export default function InformationPayment ({ activePage, clientInfo, clientInfo
                
 
             </div>
+            <button style = {{display: clientInfo.email ? "block" : "none"}} onClick = {createBooking}>Confirm</button>
             
         </div>
 

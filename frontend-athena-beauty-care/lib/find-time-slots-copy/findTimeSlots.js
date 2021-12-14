@@ -273,11 +273,13 @@ export const findTimeSlots = async (newTreatments) => {
         const newDate = new Date(dateTimes.date);
 
         const date = newDate.getDate();
+        const year = newDate.getFullYear();
         const weekDay = newDate.toLocaleString("en-us", {  weekday: "short" });
         const month = newDate.toLocaleString("en-us", { month: "short" });
 
         dateTimesArray.push({
-            date: {date, weekDay, month},
+            date: {date, weekDay, month, year},
+            dateInDateFormat: dateTimes.date,
             times: dateTimes.times
         });
 

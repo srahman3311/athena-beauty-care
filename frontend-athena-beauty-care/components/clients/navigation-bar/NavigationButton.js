@@ -4,7 +4,15 @@ import styles from "../../../styles/NavigationBar.module.css";
 
 
 
-export default function NavigationButton ({ windowWidth, state, selectedTreatments, activePage, setActivePage, value }) {
+export default function NavigationButton ({ 
+    windowWidth, 
+    state, 
+    selectedTreatments, 
+    activePage, 
+    setActivePage, 
+    value, 
+    selectedTime 
+}) {
 
 
     function changeActivePage(event) {
@@ -14,6 +22,7 @@ export default function NavigationButton ({ windowWidth, state, selectedTreatmen
         if(newValue === 2 && !state.location) return alert("Please select a location");
 
         if(newValue === 3 && !selectedTreatments.length) return alert("Please select at least one treatment");
+        if(newValue === 4 && !selectedTime) return alert("Please pick a starting time");
 
         setActivePage(newValue);
     }

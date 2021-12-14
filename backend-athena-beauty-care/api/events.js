@@ -14,7 +14,7 @@ const Stylist = require("../models/Stylist");
 const calculateEventTimes = require("../libs/calculateEventTimes");
 const findBusyTimes = require("../libs/findBusyTimes");
 const getStylistAllWorkingTimes = require("../libs/getStylistAllWorkingTimes");
-
+const calculateStartEndTimes = require("../libs/calculateStartEndTimes")
 
 
 
@@ -87,6 +87,9 @@ router.post("/", (request, response) => {
 
 
 router.post("/add-event", async (request, response) => {
+
+
+    
 
     // Destructuring request.body 
     let { 
@@ -378,6 +381,137 @@ router.post("/cancel-event", (request, response) => {
 
     });
 
+});
+
+
+router.post("/client-events", async (request, response) => {
+
+    //return response.status(201).send([{abc: "gjhgh", def: "gdfhjh"}])
+
+
+    const { sortedSelectedTreatments: treatments, selectedTime, clientInfo } = request.body;
+
+
+    const eventStartEndTimes = calculateStartEndTimes(selectedTime, treatments);
+
+
+
+    async function addEvents() {
+
+    
+
+        for(let x = 0; x < treatments.length; x++) {
+
+            const treatment = treatments[x];
+
+            const {
+                category,
+                choosenStylist,
+                location,
+                treatmentDuration,
+                treatmentPrice,
+                treatmentTitle
+            } = treatment;
+
+            const firstName = choosenStylist.substring(0, choosenStylist.indexOf(" "));
+            const lastName = choosenStylist.substring(choosenStylist.indexOf(" ") + 1, choosenStylist.length);
+
+            Stylist.findOne({ firstName, lastName }, async (error, stylist) => {
+
+
+                const refreshToken = stylist.refreshToken;
+
+                try {
+                
+                    // Get a new token each time before sending get request for calendar resources (events or whatever)
+                    const ep1 = `https://oauth2.googleapis.com/token?client_id=${process.env.CLIENT_ID}&client_secret=`
+                    const ep2 = `${process.env.CLIENT_SECRET}&refresh_token=${refreshToken}&grant_type=refresh_token`; 
+                    const tokenEndpoint = ep1 + ep2;
+            
+                    // Calling the token endpoint
+                    const accessTokenResponse = await axios.post(tokenEndpoint);
+            
+                    // accessTokenResponse.data.access_token contains the new access_token, use it to send request to get the events
+                    const token = accessTokenResponse.data.access_token;
+            
+                    try {
+
+                        const API_KEY = process.env.API_KEY;
+            
+                        const eventEndpoint = `https://www.googleapis.com/calendar/v3/calendars/primary/events?key=${API_KEY}`;
+                    
+                        const event = {
+                            summary: `${treatmentTitle} with ${firstName} ${lastName} for ${treatmentDuration} minutes`,
+                            start: {dateTime: `${eventStartEndTimes[x].eventStartTime}:00+06:00`, timeZone: "Asia/Dhaka"},
+                            end: {dateTime: `${eventStartEndTimes[x].eventEndTime}:00+06:00`, timeZone: "Asia/Dhaka"},
+                            description: `Client ${clientInfo.email}`,
+                            location: location
+                        };
+            
+                        const config = { headers: {Authorization: "Bearer " + token} }
+                        const eventResponse = await axios.post(eventEndpoint, event, config);
+
+
+                        const newEvent = new Event({
+                            startTime: eventStartEndTimes[x].eventStartTime,
+                            endTime: eventStartEndTimes[x].eventEndTime,
+                            title: `${treatmentTitle} with ${firstName} ${lastName}`,
+                            treatmentCategory: category,
+                            treatmentName: treatmentTitle,
+                            stylist: `${firstName} ${lastName}`,
+                            eventDuration: treatmentDuration,
+                            eventLocation: location,
+                            clientName: `${clientInfo.firstName} ${clientInfo.lastName}`,
+                            clientEmail: clientInfo.email,
+                            clientPhone: clientInfo.phone,
+                            description: `${treatmentTitle} with ${firstName} ${lastName} at ${location}`,
+                            eventPrice: Number(treatmentPrice),
+                            googleCalendarEventId: eventResponse.data.id,
+                            status: "Active"
+                        });
+                
+                        newEvent.save();
+                    } 
+                    catch(error) {
+
+                        console.log(error)
+                    }
+                } 
+                catch (error) {
+
+                    console.log(error);
+
+                }
+
+
+            })
+
+
+        }
+
+        return "successful";
+    }
+
+
+    const res = await addEvents();
+
+    if(res === "successful") {
+
+        Event.find({clientEmail: clientInfo.email}, (error, events) => {
+
+            if(error) response.status(500).send("Something went wrong");
+
+    
+
+            return response.status(201).send(events);
+
+        });
+
+    } else {
+        return response.status(500).send("Something went wrong");
+    }
+
+    
 });
 
 

@@ -1,6 +1,7 @@
 // React
 import { useState, useEffect } from "react";
 import useAxios from "../components/clients/libs/useAxios";
+import axios from "axios";
 
 
 // Stylesheet
@@ -22,7 +23,9 @@ export default function Home () {
 
 
     // Other states
+    const [clientEvents, setClientEvents] = useState([]);
     const [selectedTreatments, setSelectedTreatments] = useState([]);
+    const [sortedSelectedTreatments, setSortedSelectedTreatments] = useState([]);
     const [validationError, setValidationError] = useState(false);
     const [clientInfo, setClientInfo] = useState({
         firstName: "",
@@ -43,8 +46,9 @@ export default function Home () {
         paid: false,
     });
     const [activeCategory, setActiveCategory] = useState("Brows");
-    const [activeTreatment, setActiveTreatment] = useState("");
     const [activePage, setActivePage] = useState(1);
+    const [selectedDate, setSelectedDate] = useState("");
+    const [selectedTime, setSelectedTime] = useState("");
 
 
 
@@ -69,21 +73,13 @@ export default function Home () {
     function changeActiveCategory (e) {
         const text = e.target.textContent;
 
-        setActiveTreatment("");
+       
         setActiveCategory(text);
     }
 
-    function changeActiveTreatment (event) {
+   
 
-        const text = event.target.textContent;
-        const treatment = text.substring(0, text.indexOf(","));
-        // console.log(treatment);
-        
-        if(treatment === activeTreatment) return setActiveTreatment("");
-        return setActiveTreatment(treatment);
-
-    }
-
+    /*
     function addTreatment (stylist, item) {
        
         // loop through the already selected treatments to see if clicked one exists or not. It returns either true or false
@@ -147,6 +143,7 @@ export default function Home () {
         return setActiveTreatment("");
 
     }
+    */
 
     function clientInfoOnChangeHandler (event) {
 
@@ -189,8 +186,36 @@ export default function Home () {
 
     }
 
+
+    async function createBooking() {
+
+        try {
+
+            const response = await axios.post("http://localhost:7070/api/events/client-events", {
+                sortedSelectedTreatments,
+                selectedTime,
+                clientInfo
+            });
+
+            console.log(response.data);
+            setClientEvents(response.data);
+            
+           
+
+        } catch(error) {
+
+            console.log(error.response.data);
+
+        } finally {
+            setActivePage(5);
+        }
+
+       
+        
+    }
     
 
+    
     // console.log(locationData);
 
     // if(locationDataLoading || categoryDataLoading || treatmentDataLoading) {
@@ -204,6 +229,7 @@ export default function Home () {
                 selectedTreatments = {selectedTreatments}
                 activePage = {activePage} 
                 setActivePage = {setActivePage} 
+                selectedTime = {selectedTime}
             />
             <Location
                 activePage = {activePage}
@@ -213,11 +239,8 @@ export default function Home () {
 
             <CategoryTreatment
                 selectedTreatments = {selectedTreatments}
-                addTreatment = {addTreatment}
                 activePage = {activePage}
                 activeCategory = {activeCategory}
-                activeTreatment = {activeTreatment}
-                changeActiveTreatment = {changeActiveTreatment} 
                 changeActiveCategory = {changeActiveCategory}
                 selectTreatment = {selectTreatment}
             />
@@ -231,6 +254,11 @@ export default function Home () {
                 updateState = {updateState} 
                 location = {state.location}
                 selectedTreatments = {selectedTreatments}
+                setSortedSelectedTreatments = {setSortedSelectedTreatments}
+                selectedDate = {selectedDate}
+                setSelectedDate = {setSelectedDate}
+                selectedTime = {selectedTime}
+                setSelectedTime = {setSelectedTime}
             />
 
             <InformationPayment 
@@ -238,10 +266,15 @@ export default function Home () {
                 clientInfo = {clientInfo}
                 clientInfoOnChangeHandler = {clientInfoOnChangeHandler} 
                 validationError = {validationError}
+                createBooking = {createBooking}
             />
 
 
-            <Confirmation activePage = {activePage} />
+            <Confirmation 
+                activePage = {activePage}
+                clientEvents={clientEvents}
+
+            />
             {/* <Alert message="" /> */}
         </div>
     );

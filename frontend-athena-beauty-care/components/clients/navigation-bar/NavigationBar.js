@@ -10,7 +10,7 @@ import NavigationText from "./NavigationText";
 
 
 
-export default function NavigationBar ({ state, selectedTreatments, activePage, setActivePage}) {
+export default function NavigationBar ({ state, selectedTreatments, activePage, setActivePage, selectedTime }) {
 
     const items = [
         {id: 1, content: "Select Location"},
@@ -54,6 +54,7 @@ export default function NavigationBar ({ state, selectedTreatments, activePage, 
                                 activePage = {activePage}
                                 setActivePage = {setActivePage}
                                 value = {item.id} 
+                                selectedTime = {selectedTime}
                             />
                         );
                     })}
