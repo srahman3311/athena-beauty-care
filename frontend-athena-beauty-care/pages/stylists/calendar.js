@@ -38,6 +38,9 @@ export default function CalendarEvents () {
     const [events, setEvents] = useState([]);
     const [displayModal, setDisplayModal] = useState(false);
     const [calendarAccessCode, setCalendarAccessCode] = useState("");
+
+    // It will be used inside SideNav component to show or not show the integrate google calendar icon/button.
+    // Default value set to No
     const [hasGoogleCalendarAdded, setHasGoogleCalendarAdded] = useState("No");
 
     useEffect(() => {
@@ -49,6 +52,7 @@ export default function CalendarEvents () {
 
         const stylistHasAddedGoogleCalendar = localStorage.getItem("stylistHasAddedGoogleCalendar");
 
+        // Update the hasGoogleCalendarAdded state with the value from localStorage. 
         setHasGoogleCalendarAdded(stylistHasAddedGoogleCalendar);
 
         async function fetchEvents() {
@@ -66,10 +70,9 @@ export default function CalendarEvents () {
 
         fetchEvents();
 
-        // if something doesn't exist in the local storage that means it is null.
+        // If user is integrating google calendar then authCode will have a value. Use it to update the refreshToken 
+        // field of the stylist to use it later to fetch her google calendar events
         if(localStorage.getItem("authCode")) { 
-
-            console.log(localStorage.getItem("authCode"));
 
             async function updateToken() {
 
@@ -83,8 +86,15 @@ export default function CalendarEvents () {
                 if(response === "success") {
 
                     localStorage.setItem("stylistHasAddedGoogleCalendar", "Yes");
+                    
                     setHasGoogleCalendarAdded("Yes");
+
+                    // As stylist is done integrating her google calendar remove authCode from localStorage
+                    localStorage.removeItem("authCode");
+
+                    // Finally feth her google calendar events to populate the calendar
                     fetchEvents();
+
                 } else {
                     alert(response);
                 }

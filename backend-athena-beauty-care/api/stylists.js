@@ -77,8 +77,6 @@ router.get("/:_id", (request, response) => {
 
 router.post("/fetch-google-events", (request, response) => {
 
-    
-
     const { username } = request.body;
 
     Stylist.findOne({ username }, async (error, stylist) => {
@@ -369,35 +367,50 @@ router.post("/update-token", async (request, response) => {
 
     const { username, authCode } = request.body;
 
-    console.log(authCode);
+    try {
 
-    // Calling google api for access & refresh token in exchange of authorization code received from user oauth consent
-    const endpoint = "https://oauth2.googleapis.com/token?";
-    const p1 = `code=${authCode}&client_id=${process.env.CLIENT_ID}&client_secret=${process.env.CLIENT_SECRET}&`;
-    const p2 = `redirect_uri=${process.env.STYLIST_REDIRECT_URI}&grant_type=${process.env.GRANT_TYPE}`;
-    const params = p1 + p2;
+        // Calling google api for access & refresh token in exchange of authorization code received from user oauth consent
+        const endpoint = "https://oauth2.googleapis.com/token?";
+        const p1 = `code=${authCode}&client_id=${process.env.CLIENT_ID}&client_secret=${process.env.CLIENT_SECRET}&`;
+        const p2 = `redirect_uri=${process.env.STYLIST_REDIRECT_URI}&grant_type=${process.env.GRANT_TYPE}`;
+        const params = p1 + p2;
 
-    const uri = endpoint + params;
+        const uri = endpoint + params;
 
-    const authResponse = await axios.post(uri, {  headers: { "Content-Type": "application/x-www-form-urlencoded" } });
+        const authResponse = await axios.post(uri, {  headers: { "Content-Type": "application/x-www-form-urlencoded" } });
 
-    // Refresh token received from google 
-    const refreshToken = await authResponse.data.refresh_token;
+        // Refresh token received from google 
+        const refreshToken = await authResponse.data.refresh_token;
 
-    Stylist.findOne({ username }, (error, stylist) => {
+        // If something goes wrong authResponse.data won't have a refresh_token field. But reponse would still be 
+        // 200 ok. I don't know why but my guess is - if a google account ever denies to give access to it's
+        // google calendar then it can't never ever use that google account to give access. Google will mark it as 
+        // suspicious and application would break. So return with an error message to avoid breaking the application;
+        const message =  "Something is wrong with this google account, may be it denied the access first time";
+        if(!refreshToken) return response.status(500).send(message);
 
-        if(error) return response.status(500).send("Something went wrong");
+        Stylist.findOne({ username }, (error, stylist) => {
 
-        // Updating refreshToken previously set as empty string with refresh_token received from google oauth token response
-        stylist.refreshToken = refreshToken;
+            if(error) return response.status(500).send("Something went wrong");
 
-        stylist.save(err => {
+            console.log(stylist);
+            console.log(refreshToken);
 
-            if(err) return response.status(500).send("Something went wrong");
+            // Updating refreshToken previously set as empty string with refresh_token received from google oauth token response
+            stylist.refreshToken = refreshToken;
+            stylist.save(err => {
 
-            return response.status(201).send("success");
-        });
-    });  
+                if(err) return response.status(500).send("Save Error - Something went wrong");
+
+                return response.status(201).send("success");
+            });
+        }); 
+
+    } catch(error) {
+
+        return response.status(500).send("Something went wrong");
+
+    }
 });
 
 

@@ -24,11 +24,6 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/stylists/auth": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/stylists/auth.js"
-    ],
     "/stylists/calendar": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",

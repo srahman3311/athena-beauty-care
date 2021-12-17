@@ -17,6 +17,8 @@ import styles from "../../../styles/Nav.module.css"
 
 export default function SideNav2 ({ hasGoogleCalendarAdded }) {
 
+    //localStorage.setItem("stylistHasAddedGoogleCalendar", "Yes");
+
     // Google Calendar API Parameters
     const SCOPES = "https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events";
     const accessType = "access_type=offline";
