@@ -1,10 +1,9 @@
 // After client's treatments selection we need to loop through the treatments and for each treatment we need to make api
 // calls to backend to add event to google calendar and in our database. For each treatment we need to calculate start 
-// and end time in format
+// and end time in format which is accepted by google calendar api, like - 2021-12-20T16:45
 
 
 const calculateStartEndTimes = (selectedDateTime, treatments) => {
-
 
     const date = selectedDateTime.substring(0, selectedDateTime.indexOf("T"));
     const time = selectedDateTime.substring(selectedDateTime.indexOf("T") + 1, selectedDateTime.length);
@@ -76,7 +75,6 @@ const calculateStartEndTimes = (selectedDateTime, treatments) => {
     }
 
     return eventStartEndTimes;
-
 
 }
 

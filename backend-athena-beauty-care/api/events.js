@@ -386,38 +386,33 @@ router.post("/cancel-event", (request, response) => {
 
 router.post("/client-events", async (request, response) => {
 
-    //return response.status(201).send([{abc: "gjhgh", def: "gdfhjh"}])
-
-
+    // selectedTime includes the date as well
     const { sortedSelectedTreatments: treatments, selectedTime, clientInfo } = request.body;
 
-
+    // calculateStartEndTimes will return the event start and end time in google calendar api's accepted format. 
+    // For example - let's say client has booked three treatments calculated start and end time will be total three in
+    // js object, like - [{ eventStartTime: 2021-12-20T16:45, eventEndTime: 2021-12-20T17:30 }]
     const eventStartEndTimes = calculateStartEndTimes(selectedTime, treatments);
 
+    async function addEvent(treatment, eventStartEndTime) {
 
+        const {
+            category,
+            choosenStylist,
+            location,
+            treatmentDuration,
+            treatmentPrice,
+            treatmentTitle
+        } = treatment;
 
-    async function addEvents() {
-
-    
-
-        for(let x = 0; x < treatments.length; x++) {
-
-            const treatment = treatments[x];
-
-            const {
-                category,
-                choosenStylist,
-                location,
-                treatmentDuration,
-                treatmentPrice,
-                treatmentTitle
-            } = treatment;
+        return new Promise((resolve, reject) => {
 
             const firstName = choosenStylist.substring(0, choosenStylist.indexOf(" "));
             const lastName = choosenStylist.substring(choosenStylist.indexOf(" ") + 1, choosenStylist.length);
 
             Stylist.findOne({ firstName, lastName }, async (error, stylist) => {
 
+                if(error) reject(error);
 
                 const refreshToken = stylist.refreshToken;
 
@@ -427,7 +422,7 @@ router.post("/client-events", async (request, response) => {
                     const ep1 = `https://oauth2.googleapis.com/token?client_id=${process.env.CLIENT_ID}&client_secret=`
                     const ep2 = `${process.env.CLIENT_SECRET}&refresh_token=${refreshToken}&grant_type=refresh_token`; 
                     const tokenEndpoint = ep1 + ep2;
-            
+                    
                     // Calling the token endpoint
                     const accessTokenResponse = await axios.post(tokenEndpoint);
             
@@ -442,8 +437,8 @@ router.post("/client-events", async (request, response) => {
                     
                         const event = {
                             summary: `${treatmentTitle} with ${firstName} ${lastName} for ${treatmentDuration} minutes`,
-                            start: {dateTime: `${eventStartEndTimes[x].eventStartTime}:00+06:00`, timeZone: "Asia/Dhaka"},
-                            end: {dateTime: `${eventStartEndTimes[x].eventEndTime}:00+06:00`, timeZone: "Asia/Dhaka"},
+                            start: {dateTime: `${eventStartEndTime.eventStartTime}:00+06:00`, timeZone: "Asia/Dhaka"},
+                            end: {dateTime: `${eventStartEndTime.eventEndTime}:00+06:00`, timeZone: "Asia/Dhaka"},
                             description: `Client ${clientInfo.email}`,
                             location: location
                         };
@@ -451,10 +446,9 @@ router.post("/client-events", async (request, response) => {
                         const config = { headers: {Authorization: "Bearer " + token} }
                         const eventResponse = await axios.post(eventEndpoint, event, config);
 
-
                         const newEvent = new Event({
-                            startTime: eventStartEndTimes[x].eventStartTime,
-                            endTime: eventStartEndTimes[x].eventEndTime,
+                            startTime: eventStartEndTime.eventStartTime,
+                            endTime: eventStartEndTime.eventEndTime,
                             title: `${treatmentTitle} with ${firstName} ${lastName}`,
                             treatmentCategory: category,
                             treatmentName: treatmentTitle,
@@ -470,49 +464,50 @@ router.post("/client-events", async (request, response) => {
                             status: "Active"
                         });
                 
-                        newEvent.save();
+                        newEvent.save((error, event) => {
+
+                            if(error) reject(error);
+
+                            resolve(event);
+
+                        });
                     } 
                     catch(error) {
-
-                        console.log(error)
+                        if(error) reject(error);
                     }
                 } 
                 catch (error) {
-
-                    console.log(error);
-
+                    if(error) reject(error);
                 }
 
-
+                
             })
 
+        })
 
-        }
-
-        return "successful";
     }
 
 
-    const res = await addEvents();
+    const promises = [];
 
-    if(res === "successful") {
-
-        Event.find({clientEmail: clientInfo.email}, (error, events) => {
-
-            if(error) response.status(500).send("Something went wrong");
-
-    
-
-            return response.status(201).send(events);
-
-        });
-
-    } else {
-        return response.status(500).send("Something went wrong");
+    for(let x = 0; x < treatments.length; x++) {
+        promises.push(addEvent(treatments[x], eventStartEndTimes[x]));
     }
 
+    Promise.all(promises)
+        .then(events => {
+            return response.status(200).send(events);
+        })
+        .catch(error => {
+            return response.status(500).send("Something went wrong, please check with the service provider for more info"); 
+        })
     
 });
+
+
+
+
+
 
 
 

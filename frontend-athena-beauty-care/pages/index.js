@@ -197,16 +197,35 @@ export default function Home () {
                 clientInfo
             });
 
-            console.log(response.data);
-            setClientEvents(response.data);
-            
-           
+            const data = await response.data;
+
+            setClientEvents(data);
 
         } catch(error) {
 
             console.log(error.response.data);
 
         } finally {
+
+            setClientInfo({
+                firstName: "",
+                lastName: "",
+                phone: "",
+                email: "",
+                howHeardAboutUs: "",
+                others: ""
+            });
+
+            setState(currentValue => {
+                return {
+                    ...currentValue, 
+                    location: ""
+                }
+            })
+            setSelectedTreatments([]);
+            setSortedSelectedTreatments([]);
+            setSelectedDate("");
+            setSelectedTime("");
             setActivePage(5);
         }
 
