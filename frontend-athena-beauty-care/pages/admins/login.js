@@ -9,15 +9,14 @@ import styles from "../../styles/Login.module.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-
-
 //Images
 import loginBgImage from "../../images/raphael-lovaski-Pe9IXUuC6QU-unsplash.jpg";
 import logoImage from "../../images/carton-woman.jpg";
-import ServerErrorMessage from "../../components/reusable-components/ServerErrorMessage";
 
 // components
 import InputField from "../../components/reusable-components/InputField";
+import ServerErrorMessage from "../../components/reusable-components/ServerErrorMessage";
+
 
 export default function Login () {
 
@@ -25,22 +24,20 @@ export default function Login () {
     const router = useRouter();
 
     const [serverErrorMessage, setServerErrorMessage] = useState("");
-    const [adminInfo, setAdminInfo] = useState({ email: "", password: "" });
+    const [adminInfo, setAdminInfo] = useState({ emailUsername: "", password: "" });
     const [validationError, setValidationError] = useState(false);
-    
-
+   
 
     function handleChange (event) {
 
         const { name, value } = event.target;
-    
+
         setAdminInfo(currentValue => {
             return {
                 ...currentValue,
                 [name]: value
             }
         });
-
     }
 
 
@@ -48,20 +45,23 @@ export default function Login () {
 
         event.preventDefault();
 
-        const { email, password } = adminInfo;
+    
+        const { emailUsername, password } = adminInfo;
 
-        if(!email || !password) return setValidationError(true);
-
-
+        if(!emailUsername || !password) return setValidationError(true);
 
         axios.post("http://localhost:7070/api/admins/login", adminInfo, {withCredentials: true})
             .then(response => {
+
+                const { email, username, adminHasAddedGoogleCalendar } = response.data;
+
                 console.log(response.data);
-                localStorage.setItem("email", response.data.email);
-                localStorage.setItem("calendarAccessCode", response.data.calendarAccessCode);
+                localStorage.setItem("adminEmail", email);
+                localStorage.setItem("adminUsername", username);
+                localStorage.setItem("adminHasAddedGoogleCalendar", adminHasAddedGoogleCalendar);
                 router.push("/admins/calendar");
             })
-            .catch(error => setServerErrorMessage(error.response.data.msg))
+            .catch(error => setServerErrorMessage(error.response.data))
     }
     
     return (
@@ -85,11 +85,11 @@ export default function Login () {
 
                 <form className={styles.login_credentials}>
                     <InputField
-                        labelText = "Email" 
+                        labelText = "Username or email" 
                         type = "email"
-                        name = "email"
-                        value = {adminInfo.email}
-                        placeholder = "type your email here"
+                        name = "emailUsername"
+                        value = {adminInfo.emailUsername}
+                        placeholder = "type your username or email here"
                         validationError = {validationError}
                         validationErrorMessageFor = "email"
                         handleChange = {handleChange}
@@ -104,7 +104,6 @@ export default function Login () {
                         validationErrorMessageFor = "password"
                         handleChange = {handleChange}
                     />
-                    
                 </form>
                 <div className={styles.login_button}>
                     <button onClick = {login}>Login</button>
@@ -115,3 +114,8 @@ export default function Login () {
         </div>
     );
 }
+
+
+
+
+

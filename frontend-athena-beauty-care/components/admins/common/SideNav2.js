@@ -15,7 +15,7 @@ import styles from "../../../styles/Nav.module.css"
 
 
 
-export default function SideNav2 ({ hasGoogleCalendarAdded }) {
+export default function SideNav2 ({ authorizedRedirectUri, hasGoogleCalendarAdded }) {
 
     //localStorage.setItem("stylistHasAddedGoogleCalendar", "Yes");
 
@@ -24,7 +24,7 @@ export default function SideNav2 ({ hasGoogleCalendarAdded }) {
     const accessType = "access_type=offline";
     const includeScope = "include_granted_scopes=true";
     const responseType = "response_type=code";
-    const redirectUri = "redirect_uri=http://localhost:3000/stylists/auth";
+    const redirectUri = `redirect_uri=${authorizedRedirectUri}`;
 
     // Google Calendar API Endpoint
     const ep1 = "https://accounts.google.com/o/oauth2/v2/auth?";

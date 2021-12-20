@@ -5,11 +5,12 @@ const adminSchema = new mongoose.Schema({
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     email: { type: String, required: true },
+    username: { type: String, required: true },
     password: { type: String, required: true },
     status: { type: String, required: true },
-    workingLocation: { type: String, required: true},
-    imageFilename: { type: String },
-    calendarAccessCode: { type: String }
+    designation: { type: String, required: true},
+    imageUrl: { type: String },
+    refreshToken: { type: String }
 });
 
 // For Search Functionality
@@ -27,14 +28,15 @@ const Admin = mongoose.model("Admin", adminSchema);
 //     if(err) throw err;
 
 //     let newAdmin = new Admin({
-//         firstName: "Rafez",
+//         firstName: "Rafez3",
 //         lastName: "Rahman",
-//         email: "rafez3311@gmail.com",
-//         password: "rafez123",
+//         email: "samsur.rahman3311@gmail.com",
+//         username: "Rafez3123",
+//         password: "Rafez3123",
 //         status: "active",
-//         imageFilename: "",
-//         workingLocation: "Athena Beauty Care - Location 2",
-//         calendarAccessCode: ""
+//         designation: "MD",
+//         imageUrl: "",
+//         refreshToken: ""
 //     });
 
 //     bcrypt.hash(newAdmin.password, salt, (err, hash) => {

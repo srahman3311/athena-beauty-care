@@ -1,7 +1,8 @@
 // Next Modules
 import { useRouter } from "next/router"; // For Redirecting 
-import fetchStylistGoogleCalendarEvents from "../../libs/fetchStylistGoogleCalendarEvents";
-import updateStylistToken from "../../libs/updateStylistToken";
+import fetchGoogleCalendarEvents from "../../libs/fetchGoogleCalendarEvents";
+import updateUserToken from "../../libs/updateUserToken";
+
 
 // React & Other Modules
 import { useEffect, useState } from "react";
@@ -37,7 +38,7 @@ export default function CalendarEvents () {
     const [eventInfo, setEventInfo] = useState({title: "", start: "", end: ""});
     const [events, setEvents] = useState([]);
     const [displayModal, setDisplayModal] = useState(false);
-    const [calendarAccessCode, setCalendarAccessCode] = useState("");
+    
 
     // It will be used inside SideNav component to show or not show the integrate google calendar icon/button.
     // Default value set to No
@@ -61,7 +62,7 @@ export default function CalendarEvents () {
 
                 const endpoint = "http://localhost:7070/api/stylists/fetch-google-events";
 
-                const data = await fetchStylistGoogleCalendarEvents(endpoint, stylistUsername);
+                const data = await fetchGoogleCalendarEvents(endpoint, stylistUsername);
 
                 setEvents(data);
             }
@@ -81,7 +82,7 @@ export default function CalendarEvents () {
                 const authCode = localStorage.getItem("authCode");
 
                 // get the refreshToken by calling the updateStylistToken function
-                const response = await updateStylistToken(endpoint, stylistUsername, authCode);
+                const response = await updateUserToken(endpoint, stylistUsername, authCode);
 
                 if(response === "success") {
 
@@ -107,48 +108,7 @@ export default function CalendarEvents () {
 
     }, [router.isReady])
 
-    /*
-    useEffect(async () => {
-
-        // if user is not logged in redirect to login page
-        if(!CheckAuth()) return router.push("/stylists/login");
-
-        // setCalendarAccessCode(localStorage.getItem("calendarAccessCode"));
-
-        // if there is authCode in the local storage that means stylist is integrating her google calendar. 
-        // In this case stylist info must be updated by calling the google oauth token endpoint
-        if(localStorage.getItem("authCode")) { // if something doesn't exist in the local storage that means it is null.
-
-            // get the refreshToken by calling the updateAdminInfo function
-            const newRefreshToken = await updateAdminInfo();
-
-            await localStorage.setItem("calendarAccessCode", newRefreshToken);
-
-            // fetch events now
-            const data = await fetchEvents(newRefreshToken);
-
-            // update the events state
-            await setEvents(data);
-
-            // just to relaunch the calendar component so that calendar icon at sidenav dissappears
-            return setCalendarAccessCode(localStorage.getItem("calendarAccessCode"));
-        }
-
-        const calendarAccessCode = await localStorage.getItem("calendarAccessCode");
-        // if the user has logged in for the first time so he/she is yet to integrate his/her gooogle calendar,
-        // which means refreshToken of this user is just empty string. So there will be no calendar events to show 
-        if(calendarAccessCode === "" || calendarAccessCode === "undefined") {
-            console.log("refresh token is empty string");
-            return setEvents([]);
-        }
-
-        //if user has already integrated his/her google calendar then fetch all the events and update the events state
-        const data = await fetchEvents(calendarAccessCode);
-        return setEvents(data);
-       
-    }, [calendarAccessCode]);
-    */
-
+   
     function fetchUserSpecificEvents (event) {
 
         if(event.target.value === "select User") return;
@@ -196,7 +156,10 @@ export default function CalendarEvents () {
         <div className={styles.calendar}>
             <Title />
             <div className={styles.calendar_content}>
-                <SideNav2 hasGoogleCalendarAdded = {hasGoogleCalendarAdded} />
+                <SideNav2
+                    authorizedRedirectUri= "http://localhost:3000/stylists/auth" 
+                    hasGoogleCalendarAdded = {hasGoogleCalendarAdded} 
+                />
                 <div className={styles.big_calendar}>
                     <div className={styles.big_calendar_header}>
                         <h2>Calendar</h2>

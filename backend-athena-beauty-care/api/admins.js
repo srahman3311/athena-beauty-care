@@ -115,39 +115,7 @@ router.post("/add", async (request, response) => {
 
 });
 
-router.post("/update", async (request, response) => {
 
-    const { email, authCode } = request.body;
-    console.log(authCode);
-
-    // Calling google api for access & refresh token in exchange of authorization code received from user oauth consent
-    const endpoint = "https://oauth2.googleapis.com/token?";
-    const p1 = `code=${authCode}&client_id=${process.env.CLIENT_ID}&client_secret=${process.env.CLIENT_SECRET}&`;
-    const p2 = `redirect_uri=${process.env.REDIRECT_URI}&grant_type=${process.env.GRANT_TYPE}`;
-    const params = p1 + p2;
-
-    const uri = endpoint + params;
-
-    const authResponse = await axios.post(uri, {  headers: { "Content-Type": "application/x-www-form-urlencoded" } });
-
-    // Refresh token received from google 
-    const refreshToken = await authResponse.data.refresh_token;
-
-    Admin.findOne({ email }, (err, admin) => {
-
-        if(err) return response.status(500).send(err);
-
-        // Updating refreshToken previously set as empty string with refresh_token received from google oauth token response
-        admin.calendarAccessCode = refreshToken;
-
-        admin.save(err => {
-
-            if(err) return response.status(500).send(err);
-
-            return response.status(200).json({refreshToken});
-        });
-    });  
-});
 
 
 router.post("/axios-test", async (request, response) => {
@@ -160,25 +128,78 @@ router.post("/axios-test", async (request, response) => {
 });
 
 
+router.post("/fetch-google-events", (request, response) => {
+
+    const { username } = request.body;
+
+    Admin.findOne({ username }, async (error, admin) => {
+
+        if(error) return response.status(500).send("Something went wrong");
+
+        const refreshToken = admin.refreshToken;
+
+        try {
+            
+            // Get a new token each time before sending get request for calendar resources (events or whatever)
+            const ep1 = `https://oauth2.googleapis.com/token?client_id=${process.env.CLIENT_ID}&client_secret=`
+            const ep2 = `${process.env.CLIENT_SECRET}&refresh_token=${refreshToken}&grant_type=refresh_token`; 
+            const tokenEndpoint = ep1 + ep2;
+
+            // Calling the token endpoint
+            const accessTokenResponse = await axios.post(tokenEndpoint);
+
+            // accessTokenResponse.data.access_token contains the new access_token, use it to send request to get the events
+            const token = accessTokenResponse.data.access_token;
+
+            try {
+
+                // 'primary' inside the following endpoint is calendar id. 
+                const eventEndpoint = "https://www.googleapis.com/calendar/v3/calendars/primary/events";
+                const eventResponse = await axios.get( eventEndpoint, { headers: { Authorization: "Bearer " + token }});
+
+                return response.status(200).send(eventResponse.data.items)
+                
+            } 
+            catch(error) {
+
+                return response.status(500).send("Something went wrong");
+
+            }
+        } 
+        catch (error) {
+
+            return response.status(500).send("Something went wrong");
+
+        }
+    });
+
+});
+
 
 router.post("/login", (request, response) => {
-    
-    const { email, password } = request.body;
 
-    Admin.findOne({ email }, (dbError, admin) => {
-        
-        // if error is of database server send the error message
-        if(dbError) return response.status(500).send(dbError);
+    const { emailUsername, password } = request.body;
 
-        // if admin doesn't exist return with an error message
-        if(!admin) return response.status(404).json({msg: "Admin Doesn't Exist"});
+    // Following mongoose query will find the stylist by username or email. If there are multiple stylists by the 
+    // same email or username mongoose will grab the first one it finds and return;
+    const query = { $or: [{ email: emailUsername }, { username: emailUsername } ] };
+
+    Admin.findOne(query, (error, admin) => {
+
+        if(error) return response.status(500).send("Something went wrong");
+
+        // if stylist doesn't exist return with an error message
+        if(!admin) return response.status(404).send("Admin doesn't Exist");
 
         // check to see if password is correct
         bcrypt.compare(password, admin.password, (bycryptError, isMatch) => {
+
             // if error is of bcrypt send the error message
-            if(bycryptError) return response.status(500).send(bycryptError);
+            if(bycryptError) return response.status(500).send("Something went wrong");
+
             // If passwords match
             if(isMatch) {
+
                 // jwt expiresIn option is measured in seconds
                 jwt.sign(
                     {id: admin._id},
@@ -186,23 +207,84 @@ router.post("/login", (request, response) => {
                     {expiresIn: 3600},
                     (jwtError, token) => {
                         // if error is of jwt send the error message
-                        if(jwtError) return response.status(500).send(jwtError);
+                        if(jwtError) return response.status(500).send("Something went wrong");
 
                         // with maxAge httpOnly must be set to false, otherwise cookie won't be saved in browser
                         response.cookie("jwtToken", token, {maxAge: 3600000, httpOnly: false});
+
+
+                        const adminHasAddedGoogleCalendar = admin.refreshToken ? "Yes" : "No"; 
+
+                        const adminInfo = {
+                            username: admin.username,
+                            email: admin.email,
+                            adminHasAddedGoogleCalendar
+                        };
                         
-                        response.status(200).json(admin);
+                        return response.status(200).json(adminInfo);
                     }
                 );
             } 
             // If passwords don't match
             else {
-                response.status(400).json({msg: "Incorrect password"});
+                response.status(401).send("Incorrect password");
             }
         });
+
     });
 
 });
+
+
+router.post("/update-token", async (request, response) => {
+
+    const { username, authCode } = request.body;
+
+    try {
+
+        // Calling google api for access & refresh token in exchange of authorization code received from user oauth consent
+        const endpoint = "https://oauth2.googleapis.com/token?";
+        const p1 = `code=${authCode}&client_id=${process.env.CLIENT_ID}&client_secret=${process.env.CLIENT_SECRET}&`;
+        const p2 = `redirect_uri=${process.env.ADMIN_REDIRECT_URI}&grant_type=${process.env.GRANT_TYPE}`;
+        const params = p1 + p2;
+
+        const uri = endpoint + params;
+
+        const authResponse = await axios.post(uri, {  headers: { "Content-Type": "application/x-www-form-urlencoded" } });
+
+        // Refresh token received from google 
+        const refreshToken = await authResponse.data.refresh_token;
+
+        // If something goes wrong authResponse.data won't have a refresh_token field. But reponse would still be 
+        // 200 ok. I don't know why but my guess is - if a google account ever denies to give access to it's
+        // google calendar then it can't never ever use that google account to give access. Google will mark it as 
+        // suspicious and application would break. So return with an error message to avoid breaking the application;
+        const message =  "Something is wrong with this google account, may be it denied the access first time";
+        if(!refreshToken) return response.status(500).send(message);
+
+        Admin.findOne({ username }, (error, admin) => {
+
+            if(error) return response.status(500).send("Something went wrong");
+
+            // Updating refreshToken previously set as empty string with refresh_token received from google oauth token response
+            admin.refreshToken = refreshToken;
+
+            admin.save(err => {
+
+                if(err) return response.status(500).send("Save Error - Something went wrong");
+
+                return response.status(201).send("success");
+            });
+        }); 
+
+    } catch(error) {
+
+        return response.status(500).send("Something went wrong");
+
+    }
+});
+
+
 
 
 

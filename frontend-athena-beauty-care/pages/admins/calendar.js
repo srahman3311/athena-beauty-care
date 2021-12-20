@@ -1,5 +1,8 @@
 // Next Modules
 import { useRouter } from "next/router"; // For Redirecting 
+import fetchGoogleCalendarEvents from "../../libs/fetchGoogleCalendarEvents";
+import updateUserToken from "../../libs/updateUserToken";
+
 
 // React & Other Modules
 import { useEffect, useState } from "react";
@@ -11,16 +14,15 @@ import moment from "moment";
 import { CheckAuth } from "../../auth/CheckAuth";
 
 // libraries
-import { fetchEvents } from "../../lib/fetchEvents";
-import { updateAdminInfo } from "../../lib/updateAdminInfo";
-import { findTimeSlots } from "../../lib/find-time-slots/findTimeSlots";
+// import { fetchEvents } from "../../lib/fetchEvents";
+// import { updateAdminInfo } from "../../lib/updateAdminInfo";
 
 // Stylesheets
 import styles from "../../styles/Calendar.module.css";
 import "react-big-calendar/lib/css/react-big-calendar.css"; // React Big Calendar
 
 // Components
-import SideNav from "../../components/admins/common/SideNav";
+import SideNav2 from "../../components/admins/common/SideNav2";
 import Title from "../../components/admins/common/Title";
 
 // Localizing the date time
@@ -36,47 +38,75 @@ export default function CalendarEvents () {
     const [eventInfo, setEventInfo] = useState({title: "", start: "", end: ""});
     const [events, setEvents] = useState([]);
     const [displayModal, setDisplayModal] = useState(false);
-    const [calendarAccessCode, setCalendarAccessCode] = useState("");
 
-    useEffect(async () => {
+    // It will be used inside SideNav component to show or not show the integrate google calendar icon/button.
+    // Default value set to No
+    const [hasGoogleCalendarAdded, setHasGoogleCalendarAdded] = useState("No");
+
+    useEffect(() => {
 
         // if user is not logged in redirect to login page
         if(!CheckAuth()) return router.push("/admins/login");
 
-        // setCalendarAccessCode(localStorage.getItem("calendarAccessCode"));
+        const adminUsername = localStorage.getItem("adminUsername");
 
-        // if there is authCode in the local storage that means admin is integrating his/her google calendar. In this case
-        // admin info must be updated by calling the google oauth token endpoint
-        if(localStorage.getItem("authCode") !== null) { // if something doesn't exist in the local storage that means it is null.
+        const adminHasAddedGoogleCalendar = localStorage.getItem("adminHasAddedGoogleCalendar");
 
-            // get the refreshToken by calling the updateAdminInfo function
-            const newRefreshToken = await updateAdminInfo();
+        // Update the hasGoogleCalendarAdded state with the value from localStorage. 
+        setHasGoogleCalendarAdded(adminHasAddedGoogleCalendar);
 
-            await localStorage.setItem("calendarAccessCode", newRefreshToken);
+        async function fetchEvents() {
 
-            // fetch events now
-            const data = await fetchEvents(newRefreshToken);
+            if(adminHasAddedGoogleCalendar === "Yes") {
 
-            // update the events state
-            await setEvents(data);
+                const endpoint = "http://localhost:7070/api/admins/fetch-google-events";
 
-            // just to relaunch the calendar component so that calendar icon at sidenav dissappears
-            return setCalendarAccessCode(localStorage.getItem("calendarAccessCode"));
+                const data = await fetchGoogleCalendarEvents(endpoint, adminUsername);
+
+                setEvents(data);
+            }
+
         }
 
-        const calendarAccessCode = await localStorage.getItem("calendarAccessCode");
-        // if the user has logged in for the first time so he/she is yet to integrate his/her gooogle calendar,
-        // which means refreshToken of this user is just empty string. So there will be no calendar events to show 
-        if(calendarAccessCode === "" || calendarAccessCode === "undefined") {
-            console.log("refresh token is empty string");
-            return setEvents([]);
+        fetchEvents();
+
+        // If user is integrating google calendar then authCode will have a value. Use it to update the refreshToken 
+        // field of the stylist to use it later to fetch her google calendar events
+        if(localStorage.getItem("authCode")) { 
+
+            async function updateToken() {
+
+                const endpoint = "http://localhost:7070/api/admins/update-token";
+
+                const authCode = localStorage.getItem("authCode");
+
+                // get the refreshToken by calling the updateStylistToken function
+                const response = await updateUserToken(endpoint, adminUsername, authCode);
+
+                if(response === "success") {
+
+                    localStorage.setItem("adminHasAddedGoogleCalendar", "Yes");
+                    
+                    setHasGoogleCalendarAdded("Yes");
+
+                    // As stylist is done integrating her google calendar remove authCode from localStorage
+                    localStorage.removeItem("authCode");
+
+                    // Finally feth her google calendar events to populate the calendar
+                    fetchEvents();
+
+                } else {
+                    alert(response);
+                }
+
+            }
+
+            updateToken();
         }
 
-        //if user has already integrated his/her google calendar then fetch all the events and update the events state
-        const data = await fetchEvents(calendarAccessCode);
-        return setEvents(data);
-       
-    }, [calendarAccessCode]);
+
+    }, [router.isReady])
+
 
     function fetchUserSpecificEvents (event) {
 
@@ -87,6 +117,7 @@ export default function CalendarEvents () {
 
 
     function handleSelect ({ start, end }) {
+
         const title = window.prompt("Title");
         const newEvent = {title, start, end, allDay: false};
 
@@ -116,17 +147,18 @@ export default function CalendarEvents () {
         setDisplayModal(true);
     }
 
-    
-    
+   
     
  
     return (
 
         <div className={styles.calendar}>
             <Title />
-            <button onClick={findTimeSlots}>find time slots</button>
             <div className={styles.calendar_content}>
-                <SideNav calendarAccessCode = {calendarAccessCode} />
+                <SideNav2
+                    authorizedRedirectUri= "http://localhost:3000/admins/auth" 
+                    hasGoogleCalendarAdded = {hasGoogleCalendarAdded} 
+                />
                 <div className={styles.big_calendar}>
                     <div className={styles.big_calendar_header}>
                         <h2>Calendar</h2>
@@ -154,7 +186,7 @@ export default function CalendarEvents () {
             </div>
 
 
-            <div className={styles.modal} style={{display: displayModal ? "block" : "none"}}>
+            {/* <div className={styles.modal} style={{display: displayModal ? "block" : "none"}}>
                 
                 <div className={styles.modal_content}>
                     <div className={styles.event_time}>
@@ -173,8 +205,26 @@ export default function CalendarEvents () {
                     </button>
                 </div>
 
-            </div>
+            </div> */}
         </div>
         
     );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
