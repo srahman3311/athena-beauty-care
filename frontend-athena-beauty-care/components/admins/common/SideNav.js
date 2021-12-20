@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 // User Image
-import loginBgImage from "../../../images/127089417-face-expression-of-woman-with-blond-hair-smiling-beautiful-cartoon-character-modern-business-woman-v.jpg"
+import loginBgImage from "../../../images/carton-woman.jpg"
 
 // Stylesheet
 import styles from "../../../styles/Nav.module.css"

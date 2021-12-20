@@ -11,6 +11,8 @@ import Logo from "../../../images/5.svg";
 // libs
 import { getDates } from "../../../lib/getDates";
 import ItemHeader from "../client-reusable-components/ItemHeader";
+import Event from "../client-reusable-components/Event";
+
 
 // components
 
@@ -31,30 +33,22 @@ export default function Confirmation ({ activePage, clientEvents }) {
 
     
 
-
     return (
-        <div  style = {{display: activePage === 5 ? "block" : "none"}}>
+        <div  style = {{display: activePage === 5 ? "block" : "none", textAlign: "center"}}>
 
             <ItemHeader content = "Confirmation" />
 
-           
+            {
+                clientEvents.length
+                &&
+                clientEvents.map(event => {
+                    return (
+                        <Event key = {event._id.toString()} event = {event} />
+                    ); 
+                })
+            }
 
-            {clientEvents.map(event => {
-
-                return (
-                    <div className="client_events" key = {event._id.toString()}>
-                        <p>{event.description}</p>
-                        <p>{event.eventDuration}</p>
-                        <p>
-                            Event will start from {event.startTime.substring(event.startTime.indexOf("T") + 1, event.startTime.length)}
-                        </p>
-                    </div>
-                );
-            })}
-            
         </div>
-
-
 
     );
 }

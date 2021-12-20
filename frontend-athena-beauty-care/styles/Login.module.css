@@ -36,11 +36,11 @@
     margin-bottom: 20px;
 }
 
-.serverError_message {
+/* .serverError_message {
     color: #cc7351; 
     margin-bottom: 20px;
     text-align: center;
-}
+} */
 
 .login_credentials {
     width: 80%;

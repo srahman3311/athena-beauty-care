@@ -30,7 +30,6 @@ export default function Input ({ label, type, name, value, placeholder, onChange
                 value = {value}
                 content = {`${label} can't be blank`} 
             />
-            
         </div>
     );
 }

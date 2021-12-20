@@ -1,0 +1,44 @@
+.event {
+    position: relative;
+    text-align: left;
+    width: 40%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    margin: 0 auto 50px auto;
+    padding: 2%;
+    border-radius: 20px;
+}
+
+.event_image {
+    width: 150px;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+}
+
+.event_title {
+    opacity: 0.7;
+    margin: 0 0 20px 0;
+}
+
+.event_date {
+    margin: 0 0 20px 0;
+}
+
+.event_time {
+    margin: 0 0 20px 0;
+}
+
+.message_to_client {
+    margin: 0 0 20px 0;
+    opacity: 0.7;
+}
+
+.button_div {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 0 20px 0;
+}
+
+.abc {
+    background-image: #f05454b2;
+}

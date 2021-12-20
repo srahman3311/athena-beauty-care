@@ -14,9 +14,10 @@ import axios from "axios";
 //Images
 import loginBgImage from "../../images/raphael-lovaski-Pe9IXUuC6QU-unsplash.jpg";
 import logoImage from "../../images/carton-woman.jpg";
+import ServerErrorMessage from "../../components/reusable-components/ServerErrorMessage";
 
 // components
-import LoginInput from "../../components/admins/login/LoginInput";
+import InputField from "../../components/reusable-components/InputField";
 
 export default function Login () {
 
@@ -25,35 +26,33 @@ export default function Login () {
 
     const [serverErrorMessage, setServerErrorMessage] = useState("");
     const [adminInfo, setAdminInfo] = useState({ email: "", password: "" });
-    const [validationErrors, setValidationErrors] = useState({
-        isEmpty: false,
-        doesAdminExist: false,
-        isPasswordInvalid: false
-    })
-
+    const [validationError, setValidationError] = useState(false);
+    
 
 
     function handleChange (event) {
-        
-        const name = event.target.name;
-        const value = event.target.value;
 
+        const { name, value } = event.target;
+    
         setAdminInfo(currentValue => {
             return {
                 ...currentValue,
                 [name]: value
             }
         });
+
     }
 
 
-    function login () {
+    function login (event) {
+
+        event.preventDefault();
+
+        const { email, password } = adminInfo;
+
+        if(!email || !password) return setValidationError(true);
 
 
-        // Form Validation
-        if(!adminInfo.email || !adminInfo.password) {
-            return setValidationErrors(currentValue => { return {...currentValue, isEmpty: true} });
-        } 
 
         axios.post("http://localhost:7070/api/admins/login", adminInfo, {withCredentials: true})
             .then(response => {
@@ -63,23 +62,6 @@ export default function Login () {
                 router.push("/admins/calendar");
             })
             .catch(error => setServerErrorMessage(error.response.data.msg))
-
-        // // If form validation is done
-        // axios.post("http://localhost:7070/api/users/login", userInfo, {withCredentials: true})
-        //     .then(res => {
-        //         localStorage.setItem("name", res.data[0].username);
-        //         localStorage.setItem("role", res.data[0].role);
-        //         localStorage.setItem("status", res.data[0].status);
-        //         localStorage.setItem("imgUrl", res.data[0].imgUrl);
-        //         localStorage.setItem("filename", res.data[0].filename);
-        //         history.push("/dashboard");
-        //     })
-        //     .catch(err => {
-        //         setUsernameError(false);
-        //         setPasswordError(false);
-        //         setErrorMsg(err.response.data.msg);
-        //         return;
-        //     });
     }
     
     return (
@@ -99,48 +81,35 @@ export default function Login () {
                     <Image src={logoImage} alt="" />
                 </div>
                 <h2 className={styles.login_header}>Hello Gorgeous!</h2>
+                <ServerErrorMessage serverErrorMessage = {serverErrorMessage} />
 
-                <p 
-                    className={styles.serverError_message} 
-                    style = {{display: serverErrorMessage ? "block" : "none", }}
-                >
-                    {serverErrorMessage}
-                </p>
-
-                <div className={styles.login_credentials}>
-                    <LoginInput
-                        // style = {{marginBottom: "15px"}}
-                        label = "Email" 
+                <form className={styles.login_credentials}>
+                    <InputField
+                        labelText = "Email" 
                         type = "email"
                         name = "email"
                         value = {adminInfo.email}
-                        placeholder = "Type your email here"
-                        validationErrors = {validationErrors}
+                        placeholder = "type your email here"
+                        validationError = {validationError}
+                        validationErrorMessageFor = "email"
                         handleChange = {handleChange}
                     />
-                    <LoginInput
-                        label = "Password" 
+                    <InputField
+                        labelText = "Password" 
                         type = "password"
                         name = "password"
                         value = {adminInfo.password}
-                        placeholder = "Type your password here"
-                        validationErrors = {validationErrors}
+                        placeholder = "type your password here"
+                        validationError = {validationError}
+                        validationErrorMessageFor = "password"
                         handleChange = {handleChange}
                     />
-                    {/* <div className={styles.forgot_password}>
-                        <Link href="/"><a className={styles.forgot_password}>forgot password?</a></Link>
-                    </div> */}
                     
-                </div>
+                </form>
                 <div className={styles.login_button}>
                     <button onClick = {login}>Login</button>
                 </div>
                 <Link href="/"><a className={styles.forgot_password}>Forgot password?</a></Link>
-                {/* <div className={styles.register_prompt}>
-                    <p className={styles.blank_border}></p>
-                    <Link href="/"><a className={styles.register_link} >Or Register Now</a></Link>
-                    <p className={styles.blank_border}></p>
-                </div> */}
             </div>
 
         </div>

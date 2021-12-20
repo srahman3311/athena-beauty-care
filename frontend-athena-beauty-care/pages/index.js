@@ -264,9 +264,6 @@ export default function Home () {
                 selectTreatment = {selectTreatment}
             />
 
-           
-
-
             <DateTime
                 state = {state} 
                 activePage = {activePage}

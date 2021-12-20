@@ -15,8 +15,10 @@ import axios from "axios";
 import loginBgImage from "../../images/raphael-lovaski-Pe9IXUuC6QU-unsplash.jpg";
 import logoImage from "../../images/carton-woman.jpg";
 
+
 // components
-import LoginInput from "../../components/admins/login/LoginInput";
+import InputField from "../../components/reusable-components/InputField";
+import ServerErrorMessage from "../../components/reusable-components/ServerErrorMessage";
 
 export default function Login () {
 
@@ -25,13 +27,8 @@ export default function Login () {
 
     const [serverErrorMessage, setServerErrorMessage] = useState("");
     const [stylistInfo, setStylistInfo] = useState({ emailUsername: "", password: "" });
-    const [validationErrors, setValidationErrors] = useState({
-        isEmpty: false,
-        doesAdminExist: false,
-        isPasswordInvalid: false
-    })
-
-
+    const [validationError, setValidationError] = useState(false);
+   
 
     function handleChange (event) {
 
@@ -51,10 +48,9 @@ export default function Login () {
         event.preventDefault();
 
     
-        // Form Validation
-        if(!stylistInfo.emailUsername || !stylistInfo.password) {
-            return setValidationErrors(currentValue => { return {...currentValue, isEmpty: true} });
-        } 
+        const { emailUsername, password } = stylistInfo;
+
+        if(!emailUsername || !password) return setValidationError(true);
 
         axios.post("http://localhost:7070/api/stylists/login", stylistInfo, {withCredentials: true})
             .then(response => {
@@ -67,8 +63,7 @@ export default function Login () {
                 localStorage.setItem("stylistHasAddedGoogleCalendar", stylistHasAddedGoogleCalendar);
                 router.push("/stylists/calendar");
             })
-            //.catch(error => setServerErrorMessage(error.response.data.msg))
-            .catch(error => console.log(error.response.data));
+            .catch(error => setServerErrorMessage(error.response.data))
     }
     
     return (
@@ -88,31 +83,27 @@ export default function Login () {
                     <Image src={logoImage} alt="" />
                 </div>
                 <h2 className={styles.login_header}>Hello Gorgeous!</h2>
-
-                <p 
-                    className={styles.serverError_message} 
-                    style = {{display: serverErrorMessage ? "block" : "none", }}
-                >
-                    {serverErrorMessage}
-                </p>
+                <ServerErrorMessage serverErrorMessage = {serverErrorMessage} />
 
                 <form className={styles.login_credentials}>
-                    <LoginInput
-                        label = "Username/Email" 
+                    <InputField
+                        labelText = "Username or email" 
                         type = "email"
                         name = "emailUsername"
                         value = {stylistInfo.emailUsername}
-                        placeholder = "Type your email or username here"
-                        validationErrors = {validationErrors}
+                        placeholder = "type your username or email here"
+                        validationError = {validationError}
+                        validationErrorMessageFor = "email"
                         handleChange = {handleChange}
                     />
-                    <LoginInput
-                        label = "Password" 
+                    <InputField
+                        labelText = "Password" 
                         type = "password"
                         name = "password"
                         value = {stylistInfo.password}
-                        placeholder = "Type your password here"
-                        validationErrors = {validationErrors}
+                        placeholder = "type your password here"
+                        validationError = {validationError}
+                        validationErrorMessageFor = "password"
                         handleChange = {handleChange}
                     />
                 </form>
@@ -120,7 +111,6 @@ export default function Login () {
                     <button onClick = {login}>Login</button>
                 </div>
                 <Link href="/"><a className={styles.forgot_password}>Forgot password?</a></Link>
-                
             </div>
 
         </div>

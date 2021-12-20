@@ -1,0 +1,9 @@
+.validation_error_message {
+    color: darkblue;
+}
+
+.serverError_message {
+    color: #cc7351; 
+    margin-bottom: 20px;
+    text-align: center;
+}

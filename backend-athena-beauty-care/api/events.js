@@ -81,11 +81,6 @@ router.post("/", (request, response) => {
 
 
 
-
-
-
-
-
 router.post("/add-event", async (request, response) => {
 
 
@@ -386,14 +381,6 @@ router.post("/cancel-event", (request, response) => {
 
 router.post("/client-events", async (request, response) => {
 
-    // selectedTime includes the date as well
-    const { sortedSelectedTreatments: treatments, selectedTime, clientInfo } = request.body;
-
-    // calculateStartEndTimes will return the event start and end time in google calendar api's accepted format. 
-    // For example - let's say client has booked three treatments calculated start and end time will be total three in
-    // js object, like - [{ eventStartTime: 2021-12-20T16:45, eventEndTime: 2021-12-20T17:30 }]
-    const eventStartEndTimes = calculateStartEndTimes(selectedTime, treatments);
-
     async function addEvent(treatment, eventStartEndTime) {
 
         const {
@@ -479,7 +466,6 @@ router.post("/client-events", async (request, response) => {
                 catch (error) {
                     if(error) reject(error);
                 }
-
                 
             })
 
@@ -487,6 +473,13 @@ router.post("/client-events", async (request, response) => {
 
     }
 
+    // selectedTime includes the date as well
+    const { sortedSelectedTreatments: treatments, selectedTime, clientInfo } = request.body;
+
+    // calculateStartEndTimes will return the event start and end time in google calendar api's accepted format. 
+    // For example - let's say client has booked three treatments calculated start and end time will be total three in
+    // js object, like - [{ eventStartTime: 2021-12-20T16:45, eventEndTime: 2021-12-20T17:30 }]
+    const eventStartEndTimes = calculateStartEndTimes(selectedTime, treatments);
 
     const promises = [];
 

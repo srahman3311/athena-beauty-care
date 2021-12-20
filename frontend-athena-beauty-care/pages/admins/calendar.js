@@ -116,37 +116,7 @@ export default function CalendarEvents () {
         setDisplayModal(true);
     }
 
-    /*
     
-    const startTime = "08:30";
-    const endTime = "09:45";
-
-    const startingHour = Number(startTime.substring(0, 2));
-    const endingHour = Number(endTime.substring(0, 2));
-
-    const startTimeInMinute = Number(startTime.substring(0, 2) * 60) + Number(startTime.substring(3, 5));
-    const endTimeInMinute = Number(endTime.substring(0, 2) * 60) + Number(endTime.substring(3, 5));
-    console.log(startingHour, endingHour);
-    console.log(endTimeInMinute - startTimeInMinute);
-
-    */
-
-
-    // console.log(new Date("2021-10-12"));
-    // console.log(Math.ceil(3.1));
-
-    // const startTime = "08:30";
-    // console.log(Number(startTime.substring(0, 2)), startTime.substring(3, 5));
-
-
-    // let x = 0;
-    // let abc = [3, 4, 8, 2, 7] 
-
-    // abc.forEach((xxx, index) => {
-    //     if(xxx === 8) x = abc[index + 1];
-    // });
-
-    // console.log(x);
     
     
  

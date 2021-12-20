@@ -1,0 +1,24 @@
+.input_field_label {
+    display: block;
+    /* font-size: 1.2rem; */
+    margin-bottom: 10px;
+}
+
+.input_field {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.input_field input[type=text], .input_field input[type=email], .input_field input[type=password] {
+    width: 100%;
+    border: none;
+    background: none;
+    padding-bottom: 2px;
+    margin-bottom: 5px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.103);
+}
+
+.input_field input[type=text]:focus, .input_field input[type=email]:focus, .input_field input[type=password]:focus {
+    outline: none;
+}
+
