@@ -24,15 +24,15 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/admins/calendar": [
+    "/stylists/calendar": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/admins/calendar.js"
+      "static/chunks/pages/stylists/calendar.js"
     ],
-    "/admins/login": [
+    "/stylists/login": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/admins/login.js"
+      "static/chunks/pages/stylists/login.js"
     ]
   },
   "ampFirstPages": []

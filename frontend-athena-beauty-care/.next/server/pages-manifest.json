@@ -2,6 +2,6 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/admins/calendar": "pages/admins/calendar.js",
-  "/admins/login": "pages/admins/login.js"
+  "/stylists/login": "pages/stylists/login.js",
+  "/stylists/calendar": "pages/stylists/calendar.js"
 }

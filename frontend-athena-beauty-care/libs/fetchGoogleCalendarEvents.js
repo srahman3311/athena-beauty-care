@@ -1,8 +1,11 @@
 import axios from "axios";
 
-async function fetchGoogleCalendarEvents(endpoint, username) {
+async function fetchGoogleCalendarEvents(endpoint, username, setLoading, setEvents, setServerErrorMessage) {
+
 
     try {
+
+        setLoading(true);
 
         const response = await axios.post(endpoint, { username }, {withCredentials: true});
 
@@ -15,11 +18,15 @@ async function fetchGoogleCalendarEvents(endpoint, username) {
             }
         });
 
-        return data;
+        setEvents(data);
 
     } catch(error) {
 
-        alert("Something went wrong");
+        setServerErrorMessage(error.response.data);
+
+    } finally {
+
+        setLoading(false);
 
     }
 
@@ -27,3 +34,6 @@ async function fetchGoogleCalendarEvents(endpoint, username) {
 
 
 export default fetchGoogleCalendarEvents;
+
+
+

@@ -83,7 +83,7 @@ export default function Login () {
                     <Image src={logoImage} alt="" />
                 </div>
                 <h2 className={styles.login_header}>Hello Gorgeous!</h2>
-                <ServerErrorMessage serverErrorMessage = {serverErrorMessage} />
+               
 
                 <form className={styles.login_credentials}>
                     <InputField
@@ -111,8 +111,9 @@ export default function Login () {
                     <button onClick = {login}>Login</button>
                 </div>
                 <Link href="/"><a className={styles.forgot_password}>Forgot password?</a></Link>
+                <ServerErrorMessage serverErrorMessage = {serverErrorMessage} />
             </div>
-
+            
         </div>
     );
 }

@@ -37,6 +37,8 @@ export default function CalendarEvents () {
 
     const [eventInfo, setEventInfo] = useState({title: "", start: "", end: ""});
     const [events, setEvents] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [serverErrorMessage, setServerErrorMessage] = useState("");
     const [displayModal, setDisplayModal] = useState(false);
     
 
@@ -50,61 +52,26 @@ export default function CalendarEvents () {
         if(!CheckAuth()) return router.push("/stylists/login");
 
         const stylistUsername = localStorage.getItem("stylistUsername");
-
         const stylistHasAddedGoogleCalendar = localStorage.getItem("stylistHasAddedGoogleCalendar");
 
         // Update the hasGoogleCalendarAdded state with the value from localStorage. 
         setHasGoogleCalendarAdded(stylistHasAddedGoogleCalendar);
 
-        async function fetchEvents() {
+        const eventEndpoint = "http://localhost:7070/api/stylists/fetch-google-events";
+        const tokenEndpoint = "http://localhost:7070/api/stylists/update-token";
 
-            if(stylistHasAddedGoogleCalendar === "Yes") {
+        // If user has already added his/her google calendar then fetch the google events and return once done fetching
+          if(stylistHasAddedGoogleCalendar === "Yes") {
+            fetchGoogleCalendarEvents(eventEndpoint, stylistUsername, setLoading, setEvents, setServerErrorMessage);
+            return;
+        } 
 
-                const endpoint = "http://localhost:7070/api/stylists/fetch-google-events";
-
-                const data = await fetchGoogleCalendarEvents(endpoint, stylistUsername);
-
-                setEvents(data);
-            }
-
-        }
-
-        fetchEvents();
-
-        // If user is integrating google calendar then authCode will have a value. Use it to update the refreshToken 
-        // field of the stylist to use it later to fetch her google calendar events
+        // If user is trying to integrate his/her google calendar then call updateUserToken function. If everything
+        // goes ok then updateUserToken will call fetchGoogleCalendarEvents from there and fetch user's google events
         if(localStorage.getItem("authCode")) { 
-
-            async function updateToken() {
-
-                const endpoint = "http://localhost:7070/api/stylists/update-token";
-
-                const authCode = localStorage.getItem("authCode");
-
-                // get the refreshToken by calling the updateStylistToken function
-                const response = await updateUserToken(endpoint, stylistUsername, authCode);
-
-                if(response === "success") {
-
-                    localStorage.setItem("stylistHasAddedGoogleCalendar", "Yes");
-                    
-                    setHasGoogleCalendarAdded("Yes");
-
-                    // As stylist is done integrating her google calendar remove authCode from localStorage
-                    localStorage.removeItem("authCode");
-
-                    // Finally feth her google calendar events to populate the calendar
-                    fetchEvents();
-
-                } else {
-                    alert(response);
-                }
-
-            }
-
-            updateToken();
+            updateUserToken(stylistUsername, tokenEndpoint, eventEndpoint, setLoading, setEvents, setServerErrorMessage);
+            return;
         }
-
 
     }, [router.isReady])
 

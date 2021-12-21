@@ -1,26 +1,45 @@
 // Modules needed to update admin info
 import axios from "axios";
+import fetchGoogleCalendarEvents from "./fetchGoogleCalendarEvents";
 
+const updateUserToken = async (username, tokenEndpoint, eventEndpoint, setLoading, setEvents, setServerErrorMessage) => {
 
-const updateUserToken = async (endpoint, username, authCode) => {
-
-    console.log(authCode);
+    const authCode = localStorage.getItem("authCode");
 
     try {
 
-        const response = await axios.post(endpoint, { username, authCode }, {withCredentials: true});
+        setLoading(true);
 
-        return response.data;
+        const response = await axios.post(tokenEndpoint, { username, authCode }, {withCredentials: true});
+
+        localStorage.removeItem("authCode");
+
+        fetchGoogleCalendarEvents(eventEndpoint, username, setLoading, setEvents, setServerErrorMessage);
     }
-
     catch(error) {
 
+        localStorage.removeItem("authCode");
+
+        setServerErrorMessage(error.response.data);
         alert(error.response.data);
+
+    } finally {
+
+        setLoading(false);
+
     }
 
 }
 
 export default updateUserToken;
+
+
+
+
+
+
+
+
 
 
 

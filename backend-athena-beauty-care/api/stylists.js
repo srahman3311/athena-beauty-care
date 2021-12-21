@@ -386,7 +386,9 @@ router.post("/update-token", async (request, response) => {
         // 200 ok. I don't know why but my guess is - if a google account ever denies to give access to it's
         // google calendar then it can't never ever use that google account to give access. Google will mark it as 
         // suspicious and application would break. So return with an error message to avoid breaking the application;
-        const message =  "Something is wrong with this google account, may be it denied the access first time";
+        const message =  `Oops! Google didn't let you add your calendar to this application, please go to your Google 
+        account and set allow third party apps to have access settings on, if you still have problems, use Google Chrome.
+        Yes, this is weird but we don't have anything to do with it`;
         if(!refreshToken) return response.status(500).send(message);
 
         Stylist.findOne({ username }, (error, stylist) => {
