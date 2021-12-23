@@ -1,0 +1,10 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    /* background-image: linear-gradient(#f05454c5, #f05454, #f05454c5); */
+    background-image: linear-gradient(#4A47A3, #4a47a3d7, #4a47a3dc);
+    color: white;
+    align-items: center;
+    padding: 5px 30px;
+    margin-bottom: 10px;
+}

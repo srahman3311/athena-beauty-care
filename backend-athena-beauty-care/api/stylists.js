@@ -470,6 +470,19 @@ router.post("/change-password", (request, response) => {
 });
 
 
+router.get("/logout", (req, response) => {
+
+    console.log(req);
+
+    console.log("hello world");
+    
+    response.clearCookie("jwtToken");
+    return response.status(200).send("Logout successful");
+
+});
+
+
+
 
 
 

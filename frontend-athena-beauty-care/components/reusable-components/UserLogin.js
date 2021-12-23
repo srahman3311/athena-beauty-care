@@ -6,7 +6,7 @@ import Image from "next/image";
 import styles from "../../styles/Login.module.css";
 
 //Images
-import loginBgImage from "../../images/raphael-lovaski-Pe9IXUuC6QU-unsplash.jpg";
+import loginBgImage from "../../images/naveen-prajapat-eQu4HfK53lk-unsplash.jpg";
 import logoImage from "../../images/carton-woman.jpg";
 
 // components
@@ -26,11 +26,11 @@ export default function UserLogin ({
 
     
     return (
-        <div className={styles.login_content}>
+        <>
 
-            <div className={styles.bgImage}>
+            {/* <div className={styles.bgImage}>
                 <Image src = {loginBgImage} alt="Login Background Image" />
-            </div>
+            </div> */}
 
             <div className={styles.login_content}>
                 <div className={styles.logo}>
@@ -66,7 +66,7 @@ export default function UserLogin ({
                 <Link href="/"><a className={styles.forgot_password}>Forgot password?</a></Link>
             </div>
             <ServerErrorMessage serverErrorMessage = {serverErrorMessage} />
-        </div>
+        </>
     );
 }
 

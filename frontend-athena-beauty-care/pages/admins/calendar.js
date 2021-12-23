@@ -22,6 +22,7 @@ import styles from "../../styles/Calendar.module.css";
 import "react-big-calendar/lib/css/react-big-calendar.css"; // React Big Calendar
 
 // Components
+import Layout from "../../components/layout/Layout";
 import SideNav2 from "../../components/admins/common/SideNav2";
 import Title from "../../components/admins/common/Title";
 
@@ -120,61 +121,64 @@ export default function CalendarEvents () {
  
     return (
 
-        <div className={styles.calendar}>
-            <Title />
-            <div className={styles.calendar_content}>
-                <SideNav2
-                    authorizedRedirectUri= "http://localhost:3000/admins/auth" 
-                    hasGoogleCalendarAdded = {hasGoogleCalendarAdded} 
-                />
-                <div className={styles.big_calendar}>
-                    <div className={styles.big_calendar_header}>
-                        <h2>Calendar</h2>
-                        <select name="beautician" onChange = {fetchUserSpecificEvents}>
-                            <option value="select User">Select User</option>
-                            <option value="athena">Athena</option>
-                            <option value="Michelle">Michelle</option>
-                            <option value="Nicole">Nicole</option>
-                        </select>
-                    </div>
-                    <Calendar
-                        selectable // Needed for creating event, otherwise slots can't be selected
-                        localizer={localizer}
-                        defaultView="week"
-                        events={events}
-                        timeslots={6}
-                        step={10}
-                        startAccessor="start"
-                        endAccessor="end"
-                        onSelectSlot={handleSelect}
-                        onSelectEvent={displayEvent}
-                        style={{ width: "100%", height: "95%" }}
+        <Layout>
+
+            <div className={styles.calendar}>
+                {/* <Title /> */}
+                <div className={styles.calendar_content}>
+                    <SideNav2
+                        authorizedRedirectUri= "http://localhost:3000/admins/auth" 
+                        hasGoogleCalendarAdded = {hasGoogleCalendarAdded} 
                     />
+                    <div className={styles.big_calendar}>
+                        <div className={styles.big_calendar_header}>
+                            <h2>Calendar</h2>
+                            <select name="beautician" onChange = {fetchUserSpecificEvents}>
+                                <option value="select User">Select User</option>
+                                <option value="athena">Athena</option>
+                                <option value="Michelle">Michelle</option>
+                                <option value="Nicole">Nicole</option>
+                            </select>
+                        </div>
+                        <Calendar
+                            selectable // Needed for creating event, otherwise slots can't be selected
+                            localizer={localizer}
+                            defaultView="week"
+                            events={events}
+                            timeslots={6}
+                            step={10}
+                            startAccessor="start"
+                            endAccessor="end"
+                            onSelectSlot={handleSelect}
+                            onSelectEvent={displayEvent}
+                            style={{ width: "100%", height: "95%" }}
+                        />
+                    </div>
                 </div>
+
+
+                {/* <div className={styles.modal} style={{display: displayModal ? "block" : "none"}}>
+                    
+                    <div className={styles.modal_content}>
+                        <div className={styles.event_time}>
+                            <span>{eventInfo.start}</span>
+                            <span>-----</span>
+                            <span>{eventInfo.end}</span>
+                        </div>
+                        <div className={styles.event_content}>
+                            <p>{eventInfo.title}</p>
+                            <p>20 Minutes</p>
+                            <p>First time</p>
+                            <p>location 1</p>
+                        </div>
+                        <button className={styles.close_modal} onClick = {() => setDisplayModal(false)}>
+                            hide
+                        </button>
+                    </div>
+
+                </div> */}
             </div>
-
-
-            {/* <div className={styles.modal} style={{display: displayModal ? "block" : "none"}}>
-                
-                <div className={styles.modal_content}>
-                    <div className={styles.event_time}>
-                        <span>{eventInfo.start}</span>
-                        <span>-----</span>
-                        <span>{eventInfo.end}</span>
-                    </div>
-                    <div className={styles.event_content}>
-                        <p>{eventInfo.title}</p>
-                        <p>20 Minutes</p>
-                        <p>First time</p>
-                        <p>location 1</p>
-                    </div>
-                    <button className={styles.close_modal} onClick = {() => setDisplayModal(false)}>
-                        hide
-                    </button>
-                </div>
-
-            </div> */}
-        </div>
+        </Layout>
         
     );
 }

@@ -437,6 +437,13 @@ router.post("/fetch-events-by-mail", async (request, response) => {
 
 
 
+router.get("/logout", (req, response) => {
+    
+    response.clearCookie("jwtToken");
+    return response.status(200).send("Logout successful");
+
+});
+
 
 
 
