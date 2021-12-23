@@ -31,7 +31,7 @@ export default function SideNav2 ({ authorizedRedirectUri, hasGoogleCalendarAdde
     const ep2 = `scope=${SCOPES}&${accessType}&${includeScope}&${responseType}&${redirectUri}&client_id=${process.env.clientId}`;
     const googleOauthEndpoint = ep1 + ep2;
     
-
+    console.log(process.env.clientId);
     return (
 
         <div className={styles.sidenav}>

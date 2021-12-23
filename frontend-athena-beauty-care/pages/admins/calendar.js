@@ -69,7 +69,15 @@ export default function CalendarEvents () {
         // If user is trying to integrate his/her google calendar then call updateUserToken function. If everything
         // goes ok then updateUserToken will call fetchGoogleCalendarEvents from there and fetch user's google events
         if(localStorage.getItem("authCode")) { 
-            updateUserToken(adminUsername, tokenEndpoint, eventEndpoint, setLoading, setEvents, setServerErrorMessage);
+            updateUserToken(
+                adminUsername, 
+                tokenEndpoint, 
+                eventEndpoint, 
+                setLoading, 
+                setEvents, 
+                setServerErrorMessage,
+                router.pathname
+            );
             return;
         }
 

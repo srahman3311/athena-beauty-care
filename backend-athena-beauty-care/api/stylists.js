@@ -77,6 +77,8 @@ router.get("/:_id", (request, response) => {
 
 router.post("/fetch-google-events", (request, response) => {
 
+    console.log(request.body);
+
     const { username } = request.body;
 
     Stylist.findOne({ username }, async (error, stylist) => {
@@ -104,6 +106,7 @@ router.post("/fetch-google-events", (request, response) => {
                 const eventEndpoint = "https://www.googleapis.com/calendar/v3/calendars/primary/events";
                 const eventResponse = await axios.get( eventEndpoint, { headers: { Authorization: "Bearer " + token }});
 
+                console.log(eventResponse.data.items);
                 return response.status(200).send(eventResponse.data.items)
                 
             } 
@@ -124,6 +127,8 @@ router.post("/fetch-google-events", (request, response) => {
 
 
 router.post("/login", (request, response) => {
+
+    console.log(request.body);
 
     const { emailUsername, password } = request.body;
 
